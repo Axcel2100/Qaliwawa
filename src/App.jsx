@@ -21,12 +21,12 @@ import { getFirestore, doc, setDoc, onSnapshot, collection } from 'firebase/fire
 // 🔴🔴🔴 ¡ATENCIÓN! REEMPLAZA ESTOS VALORES CON TUS LLAVES DE FIREBASE 🔴🔴🔴
 // ==============================================================================
 const userFirebaseConfig = {
-  apiKey: "PEGAR_AQUI_TU_API_KEY",
-  authDomain: "PEGAR_AQUI_TU_AUTH_DOMAIN",
-  projectId: "PEGAR_AQUI_TU_PROJECT_ID",
-  storageBucket: "PEGAR_AQUI_TU_STORAGE_BUCKET",
-  messagingSenderId: "PEGAR_AQUI",
-  appId: "PEGAR_AQUI"
+  apiKey: "AIzaSyD3zDaezsATi3JKNJIkWcXYttXwgy4RVrw",
+  authDomain: "qaliwawa-89417.firebaseapp.com",
+  projectId: "qaliwawa-89417",
+  storageBucket: "qaliwawa-89417.firebasestorage.app",
+  messagingSenderId: "1994000104",
+  appId: "1:1994000104:web:2e6822a0fd153541036b5d"
 };
 // ==============================================================================
 
