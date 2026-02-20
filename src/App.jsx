@@ -17,6 +17,9 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from 'firebase/auth';
 import { getFirestore, doc, setDoc, onSnapshot, collection } from 'firebase/firestore';
 
+// ==============================================================================
+// 🔴🔴🔴 ¡ATENCIÓN! REEMPLAZA ESTOS VALORES CON TUS LLAVES DE FIREBASE 🔴🔴🔴
+// ==============================================================================
 const userFirebaseConfig = {
   apiKey: "AIzaSyD3zDaezsATi3JKNJIkWcXYttXwgy4RVrw",
   authDomain: "qaliwawa-89417.firebaseapp.com",
@@ -25,8 +28,9 @@ const userFirebaseConfig = {
   messagingSenderId: "1994000104",
   appId: "1:1994000104:web:2e6822a0fd153541036b5d"
 };
+// ==============================================================================
 
-// Soporte multiplataforma (Vite / Vercel / Canvas)
+// Soporte multiplataforma
 const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : userFirebaseConfig;
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -228,9 +232,31 @@ const getCitaStatus = (dateStr) => {
     return { status: 'futuro', label: `En ${diffDays} días`, color: 'text-blue-700', bg: 'bg-blue-50', border: 'border-blue-200' };
 };
 
+const diagnosticarAnemia = (edadMeses, hb) => {
+  if (!hb) return { anemia: false, tipo: null, mensaje: '' };
+  let anemia = false;
+  let tipo = null;
+  if (edadMeses >= 6 && edadMeses <= 23) {
+    if (hb < 7.0) { anemia = true; tipo = 'Severa'; }
+    else if (hb >= 7.0 && hb <= 9.4) { anemia = true; tipo = 'Moderada'; }
+    else if (hb >= 9.5 && hb <= 10.4) { anemia = true; tipo = 'Leve'; }
+  } else if (edadMeses >= 24 && edadMeses <= 59) {
+    if (hb < 7.0) { anemia = true; tipo = 'Severa'; }
+    else if (hb >= 7.0 && hb <= 9.9) { anemia = true; tipo = 'Moderada'; }
+    else if (hb >= 10.0 && hb <= 10.9) { anemia = true; tipo = 'Leve'; }
+  } else if (edadMeses >= 60 && edadMeses <= 132) { 
+    if (hb < 8.0) { anemia = true; tipo = 'Severa'; }
+    else if (hb >= 8.0 && hb <= 10.9) { anemia = true; tipo = 'Moderada'; }
+    else if (hb >= 11.0 && hb <= 11.4) { anemia = true; tipo = 'Leve'; }
+  } else {
+      if (hb < 11.0 && edadMeses > 0) { anemia = true; tipo = 'Sin Clasificación Específica'; }
+  }
+  return { anemia, tipo, mensaje: anemia ? `Anemia ${tipo}` : 'Normal' };
+};
+
 // --- COMPONENTES AUXILIARES ---
 const Toast = ({ message, type, onClose }) => {
-  useEffect(() => { const timer = setTimeout(onClose, 3000); return () => clearTimeout(timer); }, [onClose]);
+  useEffect(() => { const timer = setTimeout(onClose, 4000); return () => clearTimeout(timer); }, [onClose]);
   const bgColors = { success: 'bg-green-600', error: 'bg-red-600', info: 'bg-blue-600' };
   return (
     <div className={`fixed top-4 right-4 z-[100] ${bgColors[type]} text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-slideDown print:hidden`}>
@@ -2515,11 +2541,11 @@ const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); 
   const [isMobile, setIsMobile] = useState(false);
+  
   const [isOnline, setIsOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
   const [notification, setNotification] = useState(null); 
   const [authChecking, setAuthChecking] = useState(true);
 
-  // Estados Base
   const [children, _setChildren] = useState(initialData);
   const [users, _setUsers] = useState(defaultUsers);
   const [appConfig, _setAppConfig] = useState(defaultConfig);
@@ -2544,7 +2570,6 @@ const App = () => {
 
     const unsubscribeAuth = onAuthStateChanged(auth, (userRecord) => {
       if (userRecord) {
-        // Suscribirse a los datos en tiempo real una vez autenticado
         const baseRef = collection(db, 'artifacts', appId, 'public', 'data', 'qaliwawa_store');
 
         const unsubChildren = onSnapshot(doc(baseRef, 'children'), (snap) => {
@@ -2578,7 +2603,8 @@ const App = () => {
       _setChildren(prev => {
           const resolved = typeof newVal === 'function' ? newVal(prev) : newVal;
           if (!authChecking) {
-              setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'qaliwawa_store', 'children'), { list: resolved }).catch(console.error);
+              setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'qaliwawa_store', 'children'), { list: resolved })
+                .catch(err => showToast('Error al guardar en la nube (Revisa Firebase)', 'error'));
           }
           return resolved;
       });
@@ -2588,7 +2614,8 @@ const App = () => {
       _setUsers(prev => {
           const resolved = typeof newVal === 'function' ? newVal(prev) : newVal;
           if (!authChecking) {
-              setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'qaliwawa_store', 'users'), { list: resolved }).catch(console.error);
+              setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'qaliwawa_store', 'users'), { list: resolved })
+                .catch(err => showToast('Error al guardar en la nube (Revisa Firebase)', 'error'));
           }
           return resolved;
       });
@@ -2598,12 +2625,12 @@ const App = () => {
       _setAppConfig(prev => {
           const resolved = typeof newVal === 'function' ? newVal(prev) : newVal;
           if (!authChecking) {
-              setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'qaliwawa_store', 'appConfig'), { config: resolved }).catch(console.error);
+              setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'qaliwawa_store', 'appConfig'), { config: resolved })
+                .catch(err => showToast('Error al guardar en la nube (Revisa Firebase)', 'error'));
           }
           return resolved;
       });
   };
-
 
   useEffect(() => {
     const rootElement = document.getElementById('root');
