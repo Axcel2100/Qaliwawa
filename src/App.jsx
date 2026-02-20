@@ -459,10 +459,10 @@ const Dashboard = ({ children }) => {
        if (age.totalMonths === 0 && age.days <= 28) groupAnemia = 'RN';
        else if (age.totalMonths < 6) groupAnemia = '1-5M';
        else if (age.totalMonths >= 6 && age.totalMonths < 12) groupAnemia = '6-11M';
-       else if (age.totalMonths >= 12 && age.totalMonths < 24) groupAnemia = '1 Año';
-       else if (age.totalMonths >= 24 && age.totalMonths < 36) groupAnemia = '2 Años';
-       else if (age.totalMonths >= 36 && age.totalMonths < 48) groupAnemia = '3 Años';
-       else if (age.totalMonths >= 48 && age.totalMonths < 60) groupAnemia = '4 Años';
+       else if (age.totalMonths >= 12 && age.totalMonths < 24) groupAnemia = '1A';
+       else if (age.totalMonths >= 24 && age.totalMonths < 36) groupAnemia = '2A';
+       else if (age.totalMonths >= 36 && age.totalMonths < 48) groupAnemia = '3A';
+       else if (age.totalMonths >= 48 && age.totalMonths < 60) groupAnemia = '4A';
 
        if (groupAnemia) {
            if (c.anemia) anemiaPorEdad[groupAnemia]['Con Anemia']++;
@@ -873,14 +873,14 @@ const ModuloCRED = ({ children, setChildren, showToast }) => {
                   <div className="flex-1 w-full pt-1">
                       <h2 className="text-xl font-extrabold text-slate-800 leading-tight">{selectedChild.nombres} {selectedChild.apellidos}</h2>
                       <div className="flex flex-wrap items-center gap-2 mt-2">
-                          <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><FileText size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">HC:</span> {selectedChild.historiaClinica || 'S/N'}</span>
-                          <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><User size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">DNI:</span> {selectedChild.dni}</span>
-                          <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><Calendar size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">F. Nac:</span> {new Date(selectedChild.fechaNacimiento + 'T00:00:00').toLocaleDateString('es-PE', {day: '2-digit', month: 'short', year: 'numeric'})}</span>
-                          <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><Clock size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">Edad:</span> <span className={selectedChild.sexo === 'Femenino' ? 'text-pink-600 font-bold' : 'text-blue-600 font-bold'}>{calculateDetailedAge(selectedChild.fechaNacimiento)?.formatted}</span></span>
-                          <span className={`px-2 py-0.5 rounded border text-[11px] font-bold uppercase ${selectedChild.sexo === 'Femenino' ? 'bg-pink-50 text-pink-700 border-pink-200' : 'bg-blue-50 text-blue-700 border-blue-200'}`}>{selectedChild.seguro}</span>
-                          {selectedChild.anemia && (<span className="px-2 py-0.5 rounded border text-[11px] font-bold uppercase tracking-wider bg-red-50 text-red-700 border-red-200 flex items-center gap-1"><AlertTriangle size={12} className="fill-current"/> Anemia</span>)}
+                          <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-[11px] text-slate-600"><FileText size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">HC:</span> {selectedChild.historiaClinica || 'S/N'}</span>
+                          <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-[11px] text-slate-600"><User size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">DNI:</span> {selectedChild.dni}</span>
+                          <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-[11px] text-slate-600"><Calendar size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">F. Nac:</span> {new Date(selectedChild.fechaNacimiento + 'T00:00:00').toLocaleDateString('es-PE', {day: '2-digit', month: 'short', year: 'numeric'})}</span>
+                          <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-[11px] text-slate-600"><Clock size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">Edad:</span> <span className={selectedChild.sexo === 'Femenino' ? 'text-pink-600 font-bold' : 'text-blue-600 font-bold'}>{calculateDetailedAge(selectedChild.fechaNacimiento)?.formatted}</span></span>
+                          <span className={`px-2 py-0.5 rounded border text-[10px] font-bold uppercase ${selectedChild.sexo === 'Femenino' ? 'bg-pink-50 text-pink-700 border-pink-200' : 'bg-blue-50 text-blue-700 border-blue-200'}`}>{selectedChild.seguro}</span>
+                          {selectedChild.anemia && (<span className="px-2 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider bg-red-50 text-red-700 border-red-200 flex items-center gap-1"><AlertTriangle size={12} className="fill-current"/> Anemia</span>)}
                       </div>
-                      <div className="flex items-center gap-1 mt-3 text-xs text-slate-500 font-medium">
+                      <div className="flex items-center gap-1 mt-3 text-[11px] text-slate-500 font-medium">
                           <MapPin size={16} className="text-slate-400" />
                           <span className="font-bold text-slate-600">Localidad:</span> {selectedChild.localidad || '-'} 
                           <span className="mx-1.5 text-slate-300">|</span> 
@@ -1124,6 +1124,26 @@ const ModuloAnemia = ({ children, setChildren, showToast }) => {
       setDeleteHbModal({ show: false, index: null });
   };
 
+  // --- CORRECCIÓN DE EXPERIENCIA: CÁLCULO AUTOMÁTICO DE DIAGNÓSTICO Y REDIRECCIÓN ---
+  const handleHbChange = (e) => {
+      const newHb = e.target.value;
+      setHbControl(prev => {
+          const newState = { ...prev, hb: newHb };
+          if (newHb && selectedChild) {
+              const edadDetails = calculateDetailedAge(selectedChild.fechaNacimiento);
+              if (edadDetails) {
+                  const diagnosticoAuto = diagnosticarAnemia(edadDetails.totalMonths, parseFloat(newHb));
+                  if (diagnosticoAuto.anemia) {
+                      newState.resultado = `Anemia ${diagnosticoAuto.tipo}`;
+                  } else {
+                      newState.resultado = 'Normal';
+                  }
+              }
+          }
+          return newState;
+      });
+  };
+
   const handleAddHbControl = (e) => {
       e.preventDefault();
       const val = parseFloat(hbControl.hb);
@@ -1143,9 +1163,10 @@ const ModuloAnemia = ({ children, setChildren, showToast }) => {
       let updates = { hemoglobina: val, historialAnemia: nuevoHistorial };
       if (!selectedChild.anemia && isAnemia) {
           updates.anemia = true; updates.tipoAnemia = manualTipo; updates.tratamientoAnemia = { inicio: hbControl.fecha, entregas: [] };
-          showToast(`Anemia detectada. Iniciando.`, 'error');
+          showToast(`Anemia detectada. Tratamiento iniciado.`, 'error');
+          setActiveTab('tratamiento'); // SALTO AUTOMÁTICO AL TRATAMIENTO
       } else if (!isAnemia && selectedChild.anemia) {
-          showToast(`Hb Normal. Evalúe Alta.`, 'success');
+          showToast(`Hb Normal. Considere dar de alta.`, 'success');
       } else { showToast(`Guardado`, 'info'); }
       updateChildData(updates);
       setHbControl({ fecha: new Date().toISOString().split('T')[0], hb: '', tipo: 'Control', resultado: 'Normal', observacion: '' });
@@ -1233,17 +1254,18 @@ const ModuloAnemia = ({ children, setChildren, showToast }) => {
               <div className="flex-1 w-full pt-1">
                   <h2 className="text-xl font-extrabold text-slate-800 leading-tight">{selectedChild.nombres} {selectedChild.apellidos}</h2>
                   <div className="flex flex-wrap items-center gap-2 mt-2">
-                      <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><FileText size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">HC:</span> {selectedChild.historiaClinica || 'S/N'}</span>
-                      <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><User size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">DNI:</span> {selectedChild.dni}</span>
-                      <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><Calendar size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">F. Nac:</span> {new Date(selectedChild.fechaNacimiento + 'T00:00:00').toLocaleDateString('es-PE', {day: '2-digit', month: 'short', year: 'numeric'})}</span>
-                      <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><Clock size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">Edad:</span> <span className={selectedChild.sexo === 'Femenino' ? 'text-pink-600 font-bold' : 'text-blue-600 font-bold'}>{calculateDetailedAge(selectedChild.fechaNacimiento)?.formatted}</span></span>
-                      {selectedChild.anemia && (<span className="px-2 py-0.5 rounded border text-[11px] font-bold uppercase tracking-wider bg-red-50 text-red-700 border-red-200 flex items-center gap-1"><AlertTriangle size={12} className="fill-current"/> Anemia</span>)}
-                      {selectedChild.tratamientosAnemiaPrevios?.length > 0 && !selectedChild.anemia && (<span className="px-2 py-0.5 rounded border text-[11px] font-bold uppercase tracking-wider bg-green-50 text-green-700 border-green-200 flex items-center gap-1"><CheckCircle size={12} className="fill-current"/> De Alta</span>)}
-                      <span className={`px-2 py-0.5 rounded border text-[11px] font-bold uppercase tracking-wider flex items-center gap-1 ${selectedChild.anemia ? 'bg-red-50 text-red-700 border-red-200' : 'bg-blue-50 text-blue-700 border-blue-200'}`}>
+                      <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-[11px] text-slate-600"><FileText size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">HC:</span> {selectedChild.historiaClinica || 'S/N'}</span>
+                      <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-[11px] text-slate-600"><User size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">DNI:</span> {selectedChild.dni}</span>
+                      <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-[11px] text-slate-600"><Calendar size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">F. Nac:</span> {new Date(selectedChild.fechaNacimiento + 'T00:00:00').toLocaleDateString('es-PE', {day: '2-digit', month: 'short', year: 'numeric'})}</span>
+                      <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-[11px] text-slate-600"><Clock size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">Edad:</span> <span className={selectedChild.sexo === 'Femenino' ? 'text-pink-600 font-bold' : 'text-blue-600 font-bold'}>{calculateDetailedAge(selectedChild.fechaNacimiento)?.formatted}</span></span>
+                      <span className={`px-2 py-0.5 rounded border text-[10px] font-bold uppercase ${selectedChild.sexo === 'Femenino' ? 'bg-pink-50 text-pink-700 border-pink-200' : 'bg-blue-50 text-blue-700 border-blue-200'}`}>{selectedChild.seguro}</span>
+                      {selectedChild.anemia && (<span className="px-2 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider bg-red-50 text-red-700 border-red-200 flex items-center gap-1"><AlertTriangle size={12} className="fill-current"/> Anemia</span>)}
+                      {selectedChild.tratamientosAnemiaPrevios?.length > 0 && !selectedChild.anemia && (<span className="px-2 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider bg-green-50 text-green-700 border-green-200 flex items-center gap-1"><CheckCircle size={12} className="fill-current"/> De Alta</span>)}
+                      <span className={`px-2 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 ${selectedChild.anemia ? 'bg-red-50 text-red-700 border-red-200' : 'bg-blue-50 text-blue-700 border-blue-200'}`}>
                           <Droplet size={12} className="fill-current"/> Hb: {selectedChild.hemoglobina || '-'}
                       </span>
                   </div>
-                  <div className="flex items-center gap-1 mt-3 text-xs text-slate-500 font-medium">
+                  <div className="flex items-center gap-1 mt-3 text-[11px] text-slate-500 font-medium">
                       <MapPin size={16} className="text-slate-400" />
                       <span className="font-bold text-slate-600">Localidad:</span> {selectedChild.localidad || '-'} 
                       <span className="mx-1.5 text-slate-300">|</span> 
@@ -1331,7 +1353,7 @@ const ModuloAnemia = ({ children, setChildren, showToast }) => {
                       </div>
                       <form onSubmit={handleAddHbControl} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-3 items-end">
                           <div className="md:col-span-1"><label className="block text-[11px] font-bold text-slate-500 mb-1 uppercase">Fecha</label><input type="date" className="w-full border border-slate-300 p-2 rounded text-sm outline-none focus:ring-1 focus:ring-blue-400" value={hbControl.fecha} onChange={e => setHbControl({...hbControl, fecha: e.target.value})} required/></div>
-                          <div className="md:col-span-1"><label className="block text-[11px] font-bold text-slate-500 mb-1 uppercase">Valor Hb</label><input type="number" step="0.1" className="w-full border border-slate-300 p-2 rounded text-sm outline-none focus:ring-1 focus:ring-blue-400" placeholder="11.5" value={hbControl.hb} onChange={e => setHbControl({...hbControl, hb: e.target.value})} required/></div>
+                          <div className="md:col-span-1"><label className="block text-[11px] font-bold text-slate-500 mb-1 uppercase">Valor Hb</label><input type="number" step="0.1" className="w-full border border-slate-300 p-2 rounded text-sm outline-none focus:ring-1 focus:ring-blue-400" placeholder="11.5" value={hbControl.hb} onChange={handleHbChange} required/></div>
                           <div className="md:col-span-1"><label className="block text-[11px] font-bold text-slate-500 mb-1 uppercase">Tipo</label><select className="w-full border border-slate-300 p-2 rounded text-sm outline-none focus:ring-1 focus:ring-blue-400" value={hbControl.tipo} onChange={e => setHbControl({...hbControl, tipo: e.target.value})}><option>Tamizaje</option><option>Control</option><option>Diagnóstico</option><option>Alta</option></select></div>
                           <div className="md:col-span-1"><label className="block text-[11px] font-bold text-slate-500 mb-1 uppercase">Diagnóstico</label><select className="w-full border border-slate-300 p-2 rounded text-sm outline-none focus:ring-1 focus:ring-blue-400 font-medium text-slate-700" value={hbControl.resultado} onChange={e => setHbControl({...hbControl, resultado: e.target.value})}><option value="Normal">Normal</option><option value="Anemia Leve">Anemia Leve</option><option value="Anemia Moderada">Anemia Moderada</option><option value="Anemia Severa">Anemia Severa</option></select></div>
                           <div className="md:col-span-1"><label className="block text-[11px] font-bold text-slate-500 mb-1 uppercase">Observación</label><input className="w-full border border-slate-300 p-2 rounded text-sm outline-none focus:ring-1 focus:ring-blue-400" placeholder="Opcional" value={hbControl.observacion} onChange={e => setHbControl({...hbControl, observacion: e.target.value})}/></div>
