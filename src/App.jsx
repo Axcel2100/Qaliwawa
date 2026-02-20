@@ -21,12 +21,12 @@ import { getFirestore, doc, setDoc, onSnapshot, collection } from 'firebase/fire
 // 🔴🔴🔴 ¡ATENCIÓN! REEMPLAZA ESTOS VALORES CON TUS LLAVES DE FIREBASE 🔴🔴🔴
 // ==============================================================================
 const userFirebaseConfig = {
-  apiKey: "AIzaSyD3zDaezsATi3JKNJIkWcXYttXwgy4RVrw",
-  authDomain: "qaliwawa-89417.firebaseapp.com",
-  projectId: "qaliwawa-89417",
-  storageBucket: "qaliwawa-89417.firebasestorage.app",
-  messagingSenderId: "1994000104",
-  appId: "1:1994000104:web:2e6822a0fd153541036b5d"
+  apiKey: "PEGAR_AQUI_TU_API_KEY",
+  authDomain: "PEGAR_AQUI_TU_AUTH_DOMAIN",
+  projectId: "PEGAR_AQUI_TU_PROJECT_ID",
+  storageBucket: "PEGAR_AQUI_TU_STORAGE_BUCKET",
+  messagingSenderId: "PEGAR_AQUI",
+  appId: "PEGAR_AQUI"
 };
 // ==============================================================================
 
@@ -54,7 +54,7 @@ class ErrorBoundary extends React.Component {
         <div className="p-4 bg-red-50 text-red-700 rounded-lg m-4 border border-red-200 print:hidden text-sm">
           <h2 className="font-bold flex items-center gap-2"><AlertTriangle size={18} /> Ocurrió un error en este módulo</h2>
           <p className="text-xs mt-2 font-mono bg-white p-2 rounded max-h-32 overflow-auto">{this.state.error?.toString()}</p>
-          <button onClick={() => window.location.reload()} className="mt-3 bg-red-600 text-white px-3 py-1.5 rounded font-medium">Recargar aplicación</button>
+          <button onClick={() => window.location.reload()} className="mt-3 bg-red-600 text-white px-4 py-2 rounded font-medium shadow-sm">Recargar aplicación</button>
         </div>
       );
     }
@@ -209,7 +209,8 @@ const calculateDetailedAge = (birthDateString) => {
   if (days < 0) { months--; const lastMonth = new Date(today.getFullYear(), today.getMonth(), 0); days += lastMonth.getDate(); }
   if (months < 0) { years--; months += 12; }
   const totalMonths = (years * 12) + months;
-  return { years, months, days, totalMonths, formatted: `${years}a, ${months}m, ${days}d`, shortFormatted: `${years}a ${months}m` };
+  // MANTENIENDO EL FORMATO EXACTO (AÑOS, MESES Y DÍAS)
+  return { years, months, days, totalMonths, formatted: `${years} años, ${months} meses, ${days} días`, shortFormatted: `${years}a ${months}m ${days}d` };
 };
 
 const formatDateLong = (dateString) => {
@@ -259,9 +260,9 @@ const Toast = ({ message, type, onClose }) => {
   const bgColors = { success: 'bg-green-600', error: 'bg-red-600', info: 'bg-blue-600' };
   return (
     <div className={`fixed top-4 right-4 z-[100] ${bgColors[type]} text-white px-5 py-2.5 rounded-lg shadow-lg flex items-center gap-2 animate-slideDown print:hidden text-sm`}>
-      {type === 'success' && <CheckCircle size={18} />} {type === 'error' && <AlertTriangle size={18} />} {type === 'info' && <Info size={18} />}
+      {type === 'success' && <CheckCircle size={20} />} {type === 'error' && <AlertTriangle size={20} />} {type === 'info' && <Info size={20} />}
       <span className="font-medium">{message}</span>
-      <button onClick={onClose} className="ml-2 hover:bg-white/20 rounded-full p-1"><X size={14}/></button>
+      <button onClick={onClose} className="ml-2 hover:bg-white/20 rounded-full p-1"><X size={16}/></button>
     </div>
   );
 };
@@ -270,7 +271,7 @@ const CustomEdadTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
         const data = payload[0].payload;
         return (
-            <div className="bg-white p-3 border border-slate-200 shadow-xl rounded-lg z-50 min-w-[180px] text-sm text-slate-800">
+            <div className="bg-white p-3 border border-slate-200 shadow-xl rounded-lg z-50 min-w-[200px] text-sm text-slate-800">
                 <p className="font-bold text-blue-800 mb-2 border-b border-slate-100 pb-1">
                     {data.name}: {data.value} ptes.
                 </p>
@@ -278,13 +279,13 @@ const CustomEdadTooltip = ({ active, payload }) => {
                     <ul className="text-xs text-slate-600 space-y-1 max-h-40 overflow-y-auto">
                         {data.childrenList.map((c, i) => (
                             <li key={i} className="flex justify-between gap-3 border-b border-slate-50 pb-1">
-                                <span className="truncate max-w-[110px]" title={c.nombres}>{c.nombres}</span>
+                                <span className="truncate max-w-[120px]" title={c.nombres}>{c.nombres}</span>
                                 <span className="font-bold text-blue-600 whitespace-nowrap">{c.edadCorta}</span>
                             </li>
                         ))}
                     </ul>
                 ) : (
-                    <p className="text-[10px] text-slate-400 italic">No hay pacientes</p>
+                    <p className="text-[10px] text-slate-400 italic">No hay pacientes en este grupo hoy</p>
                 )}
             </div>
         );
@@ -313,7 +314,8 @@ const Login = ({ users, appConfig, onLogin }) => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-center items-center p-4 font-sans animate-fadeIn text-slate-800" style={{ colorScheme: 'light' }}>
-      <div className="bg-white w-full max-w-[380px] rounded-2xl shadow-xl overflow-hidden border border-slate-200">
+      <div className="bg-white w-full max-w-[400px] rounded-2xl shadow-xl overflow-hidden border border-slate-200">
+         {/* CABECERA LOGIN CELESTE PASTEL */}
          <div className="bg-gradient-to-br from-sky-50 to-blue-100 px-6 py-8 text-center border-b border-sky-200 relative">
              <div className="relative z-10">
                  <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm border border-sky-200 overflow-hidden p-1.5">
@@ -324,26 +326,26 @@ const Login = ({ users, appConfig, onLogin }) => {
                     )}
                  </div>
                  <h1 className="text-xl font-bold tracking-tight mb-1 text-blue-900">{safeConfig.nombreCentro}</h1>
-                 <p className="text-blue-700 text-xs font-medium">{safeConfig.slogan}</p>
+                 <p className="text-blue-700 text-sm font-medium">{safeConfig.slogan}</p>
              </div>
          </div>
 
-         <div className="p-6">
+         <div className="p-6 md:p-8">
             <form onSubmit={handleSubmit} className="space-y-5">
                {error && (
-                  <div className="bg-red-50 text-red-700 text-xs p-2.5 rounded-lg flex items-center gap-2 border border-red-200 animate-slideDown font-medium">
-                     <AlertTriangle size={14} /> {error}
+                  <div className="bg-red-50 text-red-700 text-sm p-3 rounded-lg flex items-center gap-2 border border-red-200 animate-slideDown font-medium">
+                     <AlertTriangle size={16} /> {error}
                   </div>
                )}
                
                <div>
-                   <label className="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Usuario / DNI</label>
+                   <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Usuario / DNI</label>
                    <div className="relative">
-                       <User className="absolute left-3 top-2.5 text-slate-400" size={16}/>
+                       <User className="absolute left-3 top-2.5 text-slate-400" size={18}/>
                        <input 
                           type="text" 
                           placeholder="Ingrese su usuario" 
-                          className="w-full border border-slate-300 rounded-lg py-2 pl-9 pr-3 outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-shadow text-slate-800 text-sm font-medium bg-white" 
+                          className="w-full border border-slate-300 rounded-lg py-2.5 pl-10 pr-3 outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-shadow text-slate-800 text-sm font-medium bg-white" 
                           value={username} 
                           onChange={e => setUsername(e.target.value)} 
                           required 
@@ -353,13 +355,13 @@ const Login = ({ users, appConfig, onLogin }) => {
                </div>
                
                <div>
-                   <label className="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Contraseña</label>
+                   <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Contraseña</label>
                    <div className="relative">
-                       <Lock className="absolute left-3 top-2.5 text-slate-400" size={16}/>
+                       <Lock className="absolute left-3 top-2.5 text-slate-400" size={18}/>
                        <input 
                           type="password" 
                           placeholder="••••••••" 
-                          className="w-full border border-slate-300 rounded-lg py-2 pl-9 pr-3 outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-shadow text-slate-800 text-sm font-medium tracking-widest bg-white" 
+                          className="w-full border border-slate-300 rounded-lg py-2.5 pl-10 pr-3 outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-shadow text-slate-800 text-sm font-medium tracking-widest bg-white" 
                           value={password} 
                           onChange={e => setPassword(e.target.value)} 
                           required
@@ -367,13 +369,13 @@ const Login = ({ users, appConfig, onLogin }) => {
                    </div>
                </div>
                
-               <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg shadow-sm hover:shadow transition-all flex justify-center items-center gap-2 mt-2 text-sm">
-                   Iniciar Sesión <ChevronRight size={16}/>
+               <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-sm hover:shadow transition-all flex justify-center items-center gap-2 mt-2 text-sm">
+                   Iniciar Sesión <ChevronRight size={18}/>
                </button>
             </form>
          </div>
       </div>
-      <div className="mt-6 text-center text-[11px] text-slate-400 space-y-1">
+      <div className="mt-6 text-center text-xs text-slate-400 space-y-1">
          <p>{safeConfig.footer}</p>
          <p>Versión {safeConfig.version}</p>
       </div>
@@ -457,10 +459,10 @@ const Dashboard = ({ children }) => {
        if (age.totalMonths === 0 && age.days <= 28) groupAnemia = 'RN';
        else if (age.totalMonths < 6) groupAnemia = '1-5M';
        else if (age.totalMonths >= 6 && age.totalMonths < 12) groupAnemia = '6-11M';
-       else if (age.totalMonths >= 12 && age.totalMonths < 24) groupAnemia = '1A';
-       else if (age.totalMonths >= 24 && age.totalMonths < 36) groupAnemia = '2A';
-       else if (age.totalMonths >= 36 && age.totalMonths < 48) groupAnemia = '3A';
-       else if (age.totalMonths >= 48 && age.totalMonths < 60) groupAnemia = '4A';
+       else if (age.totalMonths >= 12 && age.totalMonths < 24) groupAnemia = '1 Año';
+       else if (age.totalMonths >= 24 && age.totalMonths < 36) groupAnemia = '2 Años';
+       else if (age.totalMonths >= 36 && age.totalMonths < 48) groupAnemia = '3 Años';
+       else if (age.totalMonths >= 48 && age.totalMonths < 60) groupAnemia = '4 Años';
 
        if (groupAnemia) {
            if (c.anemia) anemiaPorEdad[groupAnemia]['Con Anemia']++;
@@ -483,16 +485,16 @@ const Dashboard = ({ children }) => {
   }, [children, selectedLocalidad]);
 
   return (
-    <div className="space-y-4 animate-fadeIn w-full">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+    <div className="space-y-5 animate-fadeIn w-full">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-5 rounded-xl shadow-sm border border-slate-100">
         <div>
-          <h2 className="text-lg font-bold text-slate-800">Estadísticas y Monitoreo</h2>
-          <p className="text-xs text-slate-500">Visualiza la situación de tu población</p>
+          <h2 className="text-xl font-bold text-slate-800">Estadísticas y Monitoreo</h2>
+          <p className="text-sm text-slate-500">Visualiza la situación de tu población</p>
         </div>
-        <div className="flex items-center gap-2 w-full md:w-auto bg-slate-50 p-1.5 rounded-lg border border-slate-200">
-           <span className="text-xs font-bold text-slate-600 flex items-center shrink-0"><MapPin size={14} className="mr-1 text-slate-400"/> Sector:</span>
+        <div className="flex items-center gap-2 w-full md:w-auto bg-slate-50 p-2 rounded-lg border border-slate-200">
+           <span className="text-sm font-bold text-slate-600 flex items-center shrink-0"><MapPin size={16} className="mr-1 text-slate-400"/> Sector:</span>
            <select
-              className="w-full md:w-40 bg-white border border-slate-300 text-slate-800 rounded px-2 py-1 text-xs font-medium outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm"
+              className="w-full md:w-48 bg-white border border-slate-300 text-slate-800 rounded px-3 py-1.5 text-sm font-medium outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm"
               value={selectedLocalidad}
               onChange={(e) => setSelectedLocalidad(e.target.value)}
            >
@@ -501,22 +503,22 @@ const Dashboard = ({ children }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow"><div><p className="text-xs text-slate-500 font-medium">Total Niños ({selectedLocalidad})</p><p className="text-2xl font-bold text-blue-600">{stats.total}</p></div><Users className="w-10 h-10 text-blue-100 bg-blue-600 rounded-full p-2" /></div>
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow"><div><p className="text-xs text-slate-500 font-medium">Casos de Anemia</p><p className="text-2xl font-bold text-red-600">{stats.anemiaCases}</p></div><Droplet className="w-10 h-10 text-red-100 bg-red-600 rounded-full p-2" /></div>
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow"><div><p className="text-xs text-slate-500 font-medium">Nutrición Normal</p><p className="text-2xl font-bold text-green-600">{stats.nutricionData[0].value}</p></div><Activity className="w-10 h-10 text-green-100 bg-green-600 rounded-full p-2" /></div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow"><div><p className="text-sm text-slate-500 font-medium">Total Niños ({selectedLocalidad})</p><p className="text-3xl font-bold text-blue-600">{stats.total}</p></div><Users className="w-12 h-12 text-blue-100 bg-blue-600 rounded-full p-2.5" /></div>
+        <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow"><div><p className="text-sm text-slate-500 font-medium">Casos de Anemia</p><p className="text-3xl font-bold text-red-600">{stats.anemiaCases}</p></div><Droplet className="w-12 h-12 text-red-100 bg-red-600 rounded-full p-2.5" /></div>
+        <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition-shadow"><div><p className="text-sm text-slate-500 font-medium">Nutrición Normal</p><p className="text-3xl font-bold text-green-600">{stats.nutricionData[0].value}</p></div><Activity className="w-12 h-12 text-green-100 bg-green-600 rounded-full p-2.5" /></div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 h-[280px] flex flex-col">
-           <h3 className="text-sm font-bold text-slate-700 flex items-center gap-1.5"><Users size={16} className="text-purple-600"/> Población Etaria</h3>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 h-[320px] flex flex-col">
+           <h3 className="text-base font-bold text-slate-700 flex items-center gap-2"><Users size={18} className="text-purple-600"/> Población Etaria</h3>
            <ResponsiveContainer width="100%" height="100%" className="mt-2">
              <BarChart data={stats.edadData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-               <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 11}} dy={10} />
-               <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 11}} />
+               <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} dy={10} />
+               <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} />
                <Tooltip content={<CustomEdadTooltip />} cursor={{fill: '#f1f5f9'}} />
-               <Bar dataKey="value" fill="#8B5CF6" radius={[4, 4, 0, 0]} maxBarSize={40}>
+               <Bar dataKey="value" fill="#8B5CF6" radius={[4, 4, 0, 0]} maxBarSize={45}>
                  {stats.edadData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                  ))}
@@ -525,15 +527,15 @@ const Dashboard = ({ children }) => {
            </ResponsiveContainer>
         </div>
 
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 h-[280px] flex flex-col">
-            <h3 className="text-sm font-bold text-slate-700 flex items-center gap-1.5"><Activity size={16} className="text-green-600"/> Estado Nutricional</h3>
+        <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 h-[320px] flex flex-col">
+            <h3 className="text-base font-bold text-slate-700 flex items-center gap-2"><Activity size={18} className="text-green-600"/> Estado Nutricional</h3>
             <ResponsiveContainer width="100%" height="100%" className="mt-2">
                 <BarChart data={stats.nutricionData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0"/>
-                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 11}} dy={10}/>
-                    <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 11}}/>
-                    <Tooltip cursor={{fill: '#f1f5f9'}} contentStyle={{fontSize: '12px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}} />
-                    <Bar dataKey="value" radius={[4, 4, 0, 0]} maxBarSize={50}>
+                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} dy={10}/>
+                    <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}}/>
+                    <Tooltip cursor={{fill: '#f1f5f9'}} contentStyle={{fontSize: '13px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}} />
+                    <Bar dataKey="value" radius={[4, 4, 0, 0]} maxBarSize={55}>
                         {stats.nutricionData.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
@@ -542,17 +544,17 @@ const Dashboard = ({ children }) => {
             </ResponsiveContainer>
         </div>
 
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 h-[300px] lg:col-span-2 flex flex-col">
-            <h3 className="text-sm font-bold text-slate-700 flex items-center gap-1.5 mb-2"><Droplet size={16} className="text-red-600"/> Prevalencia de Anemia</h3>
+        <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 h-[340px] lg:col-span-2 flex flex-col">
+            <h3 className="text-base font-bold text-slate-700 flex items-center gap-2 mb-2"><Droplet size={18} className="text-red-600"/> Prevalencia de Anemia</h3>
             <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={stats.anemiaPorEdadData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0"/>
-                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 11}} dy={10}/>
-                    <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 11}}/>
-                    <Tooltip cursor={{fill: '#f1f5f9'}} contentStyle={{fontSize: '12px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}} />
-                    <Legend verticalAlign="top" height={24} iconType="circle" wrapperStyle={{fontSize: '11px', color: '#475569'}} />
-                    <Bar dataKey="Con Anemia" fill="#EF4444" radius={[3, 3, 0, 0]} maxBarSize={40} />
-                    <Bar dataKey="Sin Anemia" fill="#3B82F6" radius={[3, 3, 0, 0]} maxBarSize={40} />
+                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} dy={10}/>
+                    <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}}/>
+                    <Tooltip cursor={{fill: '#f1f5f9'}} contentStyle={{fontSize: '13px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}} />
+                    <Legend verticalAlign="top" height={24} iconType="circle" wrapperStyle={{fontSize: '12px', color: '#475569'}} />
+                    <Bar dataKey="Con Anemia" fill="#EF4444" radius={[3, 3, 0, 0]} maxBarSize={45} />
+                    <Bar dataKey="Sin Anemia" fill="#3B82F6" radius={[3, 3, 0, 0]} maxBarSize={45} />
                 </BarChart>
             </ResponsiveContainer>
         </div>
@@ -604,79 +606,79 @@ const PadronNominal = ({ children, setChildren, showToast }) => {
 
   return (
     <div className="space-y-4 w-full">
-      <div className="flex flex-col md:flex-row justify-between items-center gap-3 bg-white p-4 rounded-xl shadow-sm border border-slate-100">
-        <h2 className="text-lg font-bold text-slate-800">Padrón Nominal</h2>
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-5 rounded-xl shadow-sm border border-slate-100">
+        <h2 className="text-xl font-bold text-slate-800">Padrón Nominal</h2>
         <div className="flex gap-2 w-full md:w-auto">
-          <div className="relative flex-1 md:w-56"><Search className="absolute left-3 top-2 w-4 h-4 text-slate-400" /><input type="text" placeholder="DNI o Nombre" className="w-full pl-9 pr-3 py-1.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-400 bg-white" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} /></div>
-          <button onClick={handleNew} className="bg-blue-600 text-white px-3 py-1.5 text-sm rounded-lg hover:bg-blue-700 flex items-center gap-1.5"><Plus size={16} /> Nuevo</button>
+          <div className="relative flex-1 md:w-64"><Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" /><input type="text" placeholder="DNI o Nombre" className="w-full pl-9 pr-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-400 bg-white" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} /></div>
+          <button onClick={handleNew} className="bg-blue-600 text-white px-4 py-2 text-sm rounded-lg hover:bg-blue-700 flex items-center gap-1.5"><Plus size={18} /> Nuevo Paciente</button>
         </div>
       </div>
       
-      {childToDelete && (<div className="fixed inset-0 bg-slate-900/50 z-[60] flex justify-center items-center p-4"><div className="bg-white rounded-xl shadow-xl p-5 w-full max-w-sm"><div className="flex flex-col items-center text-center"><h3 className="text-base font-bold mb-1 text-slate-800">¿Eliminar?</h3><p className="mb-4 text-sm text-slate-600">Borrarás a {childToDelete.nombres}</p><div className="flex gap-2 w-full"><button onClick={() => setChildToDelete(null)} className="flex-1 py-1.5 text-sm bg-slate-100 text-slate-700 rounded-lg font-medium">Cancelar</button><button onClick={confirmDelete} className="flex-1 py-1.5 text-sm bg-red-600 text-white rounded-lg font-medium">Eliminar</button></div></div></div></div>)}
+      {childToDelete && (<div className="fixed inset-0 bg-slate-900/50 z-[60] flex justify-center items-center p-4"><div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-sm"><div className="flex flex-col items-center text-center"><h3 className="text-lg font-bold mb-1 text-slate-800">¿Eliminar?</h3><p className="mb-4 text-sm text-slate-600">Borrarás a {childToDelete.nombres}</p><div className="flex gap-2 w-full"><button onClick={() => setChildToDelete(null)} className="flex-1 py-2 text-sm bg-slate-100 text-slate-700 rounded-lg font-medium">Cancelar</button><button onClick={confirmDelete} className="flex-1 py-2 text-sm bg-red-600 text-white rounded-lg font-medium">Eliminar</button></div></div></div></div>)}
       
       {showForm && (
-        <div className="fixed inset-0 bg-slate-900/50 z-50 flex justify-center items-start pt-6 overflow-y-auto pb-6">
+        <div className="fixed inset-0 bg-slate-900/50 z-50 flex justify-center items-start pt-8 overflow-y-auto pb-8">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-3xl m-2 animate-slideDown overflow-hidden">
-            <div className="bg-blue-600 p-3.5 flex justify-between items-center text-white">
-              <h3 className="text-base font-bold">{isEditing ? 'Editar Paciente' : 'Nuevo Paciente'}</h3>
-              <button onClick={() => setShowForm(false)} className="hover:bg-blue-700 p-1 rounded-md"><X size={18}/></button>
+            <div className="bg-blue-600 p-4 flex justify-between items-center text-white">
+              <h3 className="text-lg font-bold">{isEditing ? 'Editar Paciente' : 'Nuevo Paciente'}</h3>
+              <button onClick={() => setShowForm(false)} className="hover:bg-blue-700 p-1 rounded-md"><X size={20}/></button>
             </div>
             
-            <form onSubmit={handleAdd} className="p-5 space-y-6 bg-slate-50/50">
-              <div className="space-y-3">
-                <h4 className="flex items-center gap-1.5 text-blue-800 text-sm font-bold border-b border-slate-200 pb-1.5"><User size={16} /> Datos Personales</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <form onSubmit={handleAdd} className="p-6 space-y-6 bg-slate-50/50">
+              <div className="space-y-4">
+                <h4 className="flex items-center gap-1.5 text-blue-800 text-base font-bold border-b border-slate-200 pb-2"><User size={18} /> Datos Personales</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">N° Historia Clínica</label>
-                    <div className="relative"><FileText className="absolute left-2.5 top-2 text-slate-400" size={14}/><input name="historiaClinica" placeholder="Ej. HC-12345" className="w-full pl-8 pr-3 py-1.5 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.historiaClinica} onChange={handleInputChange} /></div>
+                    <div className="relative"><FileText className="absolute left-2.5 top-2.5 text-slate-400" size={16}/><input name="historiaClinica" placeholder="Ej. HC-12345" className="w-full pl-9 pr-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.historiaClinica} onChange={handleInputChange} /></div>
                   </div>
                   <div>
                     <label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">DNI / CNV *</label>
-                    <div className="relative"><CreditCard className="absolute left-2.5 top-2 text-slate-400" size={14}/><input name="dni" placeholder="8 dígitos" className="w-full pl-8 pr-3 py-1.5 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.dni} onChange={handleInputChange} required /></div>
+                    <div className="relative"><CreditCard className="absolute left-2.5 top-2.5 text-slate-400" size={16}/><input name="dni" placeholder="8 dígitos" className="w-full pl-9 pr-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.dni} onChange={handleInputChange} required /></div>
                   </div>
                   <div className="md:col-span-2">
                     <label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Nombres y Apellidos *</label>
-                    <div className="grid grid-cols-2 gap-3">
-                      <input name="nombres" placeholder="Nombres" className="w-full px-3 py-1.5 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.nombres} onChange={handleInputChange} required />
-                      <input name="apellidos" placeholder="Apellidos" className="w-full px-3 py-1.5 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.apellidos} onChange={handleInputChange} required />
+                    <div className="grid grid-cols-2 gap-4">
+                      <input name="nombres" placeholder="Nombres" className="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.nombres} onChange={handleInputChange} required />
+                      <input name="apellidos" placeholder="Apellidos" className="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.apellidos} onChange={handleInputChange} required />
                     </div>
                   </div>
                   <div>
                     <label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Fecha de Nacimiento *</label>
-                    <input type="date" name="fechaNacimiento" className="w-full px-3 py-1.5 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white text-slate-700 mb-1" value={newChild.fechaNacimiento} onChange={handleInputChange} required />
-                    {currentAgeDisplay && (<span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100 inline-block">Edad: {currentAgeDisplay}</span>)}
+                    <input type="date" name="fechaNacimiento" className="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white text-slate-700 mb-1" value={newChild.fechaNacimiento} onChange={handleInputChange} required />
+                    {currentAgeDisplay && (<span className="text-[11px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-100 inline-block">Edad: {currentAgeDisplay}</span>)}
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Sexo</label>
-                        <select name="sexo" className="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white text-slate-700" value={newChild.sexo} onChange={handleInputChange}><option>Masculino</option><option>Femenino</option></select>
+                        <select name="sexo" className="w-full px-2 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white text-slate-700" value={newChild.sexo} onChange={handleInputChange}><option>Masculino</option><option>Femenino</option></select>
                       </div>
                       <div>
                         <label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Seguro</label>
-                        <select name="seguro" className="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white text-slate-700" value={newChild.seguro} onChange={handleInputChange}><option>SIS</option><option>EsSalud</option><option>Privado</option><option>Ninguno</option></select>
+                        <select name="seguro" className="w-full px-2 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white text-slate-700" value={newChild.seguro} onChange={handleInputChange}><option>SIS</option><option>EsSalud</option><option>Privado</option><option>Ninguno</option></select>
                       </div>
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-3 pt-1">
-                <h4 className="flex items-center gap-1.5 text-blue-800 text-sm font-bold border-b border-slate-200 pb-1.5"><MapPin size={16} /> Ubicación y Contacto</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div><label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Responsable</label><input name="responsable" placeholder="Apoderado" className="w-full px-3 py-1.5 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.responsable} onChange={handleInputChange} /></div>
-                  <div><label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Teléfono</label><div className="relative"><Phone className="absolute left-2.5 top-2 text-slate-400" size={14}/><input name="telefono" placeholder="999-999-999" className="w-full pl-8 pr-3 py-1.5 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.telefono} onChange={handleInputChange} /></div></div>
-                  <div className="md:col-span-2"><label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Dirección</label><input name="direccion" placeholder="Av/Jr/Calle" className="w-full px-3 py-1.5 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.direccion} onChange={handleInputChange} /></div>
-                  <div className="grid grid-cols-2 gap-3 md:col-span-2">
-                      <div><label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Departamento</label><input name="departamento" className="w-full px-3 py-1.5 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.departamento} onChange={handleInputChange} /></div>
-                      <div><label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Provincia</label><input name="provincia" className="w-full px-3 py-1.5 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.provincia} onChange={handleInputChange} /></div>
-                      <div><label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Distrito</label><input name="distrito" className="w-full px-3 py-1.5 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.distrito} onChange={handleInputChange} /></div>
-                      <div><label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Localidad</label><input name="localidad" className="w-full px-3 py-1.5 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.localidad} onChange={handleInputChange} /></div>
+              <div className="space-y-4 pt-2">
+                <h4 className="flex items-center gap-1.5 text-blue-800 text-base font-bold border-b border-slate-200 pb-2"><MapPin size={18} /> Ubicación y Contacto</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div><label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Responsable</label><input name="responsable" placeholder="Apoderado" className="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.responsable} onChange={handleInputChange} /></div>
+                  <div><label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Teléfono</label><div className="relative"><Phone className="absolute left-2.5 top-2.5 text-slate-400" size={16}/><input name="telefono" placeholder="999-999-999" className="w-full pl-9 pr-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.telefono} onChange={handleInputChange} /></div></div>
+                  <div className="md:col-span-2"><label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Dirección</label><input name="direccion" placeholder="Av/Jr/Calle" className="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.direccion} onChange={handleInputChange} /></div>
+                  <div className="grid grid-cols-2 gap-4 md:col-span-2">
+                      <div><label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Departamento</label><input name="departamento" className="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.departamento} onChange={handleInputChange} /></div>
+                      <div><label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Provincia</label><input name="provincia" className="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.provincia} onChange={handleInputChange} /></div>
+                      <div><label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Distrito</label><input name="distrito" className="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.distrito} onChange={handleInputChange} /></div>
+                      <div><label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Localidad</label><input name="localidad" className="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.localidad} onChange={handleInputChange} /></div>
                   </div>
                 </div>
               </div>
 
-              <div className="flex justify-end pt-4 border-t border-slate-200 gap-2 mt-2">
-                <button type="button" onClick={() => setShowForm(false)} className="px-4 py-1.5 text-sm bg-white border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 font-medium transition-colors">Cancelar</button>
-                <button type="submit" className="px-4 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium shadow-sm flex items-center gap-1.5 transition-colors"><Save size={16}/> Guardar</button>
+              <div className="flex justify-end pt-5 border-t border-slate-200 gap-3 mt-4">
+                <button type="button" onClick={() => setShowForm(false)} className="px-5 py-2 text-sm bg-white border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 font-medium transition-colors">Cancelar</button>
+                <button type="submit" className="px-5 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium shadow-sm flex items-center gap-2 transition-colors"><Save size={18}/> Guardar</button>
               </div>
             </form>
           </div>
@@ -685,60 +687,60 @@ const PadronNominal = ({ children, setChildren, showToast }) => {
       
       {showViewModal && viewChild && (
         <div className="fixed inset-0 bg-slate-900/60 z-50 flex justify-center items-center p-4">
-           <div className="bg-white rounded-xl shadow-2xl w-full max-w-xl flex flex-col max-h-[90vh]" style={{ transform: `translate(${modalPosition.x}px, ${modalPosition.y}px)`, transition: isDragging ? 'none' : 'transform 0.1s' }}>
-              <div className="bg-blue-600 p-3.5 flex justify-between items-center text-white cursor-move select-none rounded-t-xl" onMouseDown={handleMouseDown}><h3 className="text-base font-bold flex items-center gap-2"><Move size={16} className="opacity-70"/> Ficha del Paciente</h3><button onClick={() => setShowViewModal(false)} className="hover:bg-blue-700 p-1 rounded-md cursor-pointer" onMouseDown={(e) => e.stopPropagation()}><X size={18}/></button></div>
-              <div className="p-5 overflow-y-auto">
-                <div className="flex items-center gap-3 mb-5"><div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center"><User size={24} /></div><div><h2 className="text-lg font-bold text-slate-800">{viewChild.nombres} {viewChild.apellidos}</h2><div className="flex gap-2 mt-0.5"><span className="bg-blue-50 text-blue-800 text-[10px] font-bold px-1.5 py-0.5 rounded border border-blue-100">DNI: {viewChild.dni}</span><span className="bg-purple-50 text-purple-800 text-[10px] font-bold px-1.5 py-0.5 rounded border border-purple-100">{viewChild.historiaClinica || 'S/N'}</span></div></div></div>
-                <div className="bg-white border border-slate-100 rounded-lg p-3 mb-3 shadow-sm"><h4 className="text-blue-800 text-sm font-bold flex items-center gap-1.5 mb-2"><Activity size={14}/> Datos Básicos</h4><div className="grid grid-cols-2 gap-y-2 gap-x-4"><div><p className="text-[10px] text-slate-400 uppercase font-bold">F. Nacimiento</p><p className="text-slate-800 text-sm font-medium">{formatDateLong(viewChild.fechaNacimiento)}</p></div><div><p className="text-[10px] text-slate-400 uppercase font-bold">Sexo</p><p className="text-slate-800 text-sm font-medium">{viewChild.sexo}</p></div><div><p className="text-[10px] text-slate-400 uppercase font-bold">Seguro</p><p className="text-slate-800 text-sm font-medium">{viewChild.seguro}</p></div><div><p className="text-[10px] text-slate-400 uppercase font-bold">Edad</p><p className="text-slate-800 font-bold text-sm">{calculateDetailedAge(viewChild.fechaNacimiento)?.shortFormatted || '-'}</p></div></div></div>
-                <div className="bg-white border border-slate-100 rounded-lg p-3 shadow-sm"><h4 className="text-blue-800 text-sm font-bold flex items-center gap-1.5 mb-2"><MapPin size={14}/> Contacto</h4><div className="grid grid-cols-2 gap-y-2 gap-x-4"><div className="col-span-2"><p className="text-[10px] text-slate-400 uppercase font-bold">Dirección</p><p className="text-slate-800 text-sm font-medium">{viewChild.direccion}</p></div><div><p className="text-[10px] text-slate-400 uppercase font-bold">Localidad</p><p className="text-slate-800 text-sm font-medium">{viewChild.localidad || '-'}</p></div><div><p className="text-[10px] text-slate-400 uppercase font-bold">Distrito</p><p className="text-slate-800 text-sm font-medium">{viewChild.distrito || '-'}</p></div><div><p className="text-[10px] text-slate-400 uppercase font-bold">Responsable</p><p className="text-slate-800 text-sm font-medium">{viewChild.responsable || '-'}</p></div><div><p className="text-[10px] text-slate-400 uppercase font-bold">Teléfono</p><p className="text-slate-800 text-sm font-medium">{viewChild.telefono || '-'}</p></div></div></div>
+           <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh]" style={{ transform: `translate(${modalPosition.x}px, ${modalPosition.y}px)`, transition: isDragging ? 'none' : 'transform 0.1s' }}>
+              <div className="bg-blue-600 p-4 flex justify-between items-center text-white cursor-move select-none rounded-t-xl" onMouseDown={handleMouseDown}><h3 className="text-lg font-bold flex items-center gap-2"><Move size={18} className="opacity-70"/> Ficha del Paciente</h3><button onClick={() => setShowViewModal(false)} className="hover:bg-blue-700 p-1.5 rounded-md cursor-pointer" onMouseDown={(e) => e.stopPropagation()}><X size={20}/></button></div>
+              <div className="p-6 overflow-y-auto">
+                <div className="flex items-center gap-4 mb-6"><div className="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center"><User size={28} /></div><div><h2 className="text-xl font-bold text-slate-800">{viewChild.nombres} {viewChild.apellidos}</h2><div className="flex gap-2 mt-1"><span className="bg-blue-50 text-blue-800 text-[11px] font-bold px-2 py-0.5 rounded border border-blue-100">DNI: {viewChild.dni}</span><span className="bg-purple-50 text-purple-800 text-[11px] font-bold px-2 py-0.5 rounded border border-purple-100">{viewChild.historiaClinica || 'S/N'}</span></div></div></div>
+                <div className="bg-white border border-slate-100 rounded-lg p-4 mb-4 shadow-sm"><h4 className="text-blue-800 text-sm font-bold flex items-center gap-1.5 mb-3"><Activity size={16}/> Datos Básicos</h4><div className="grid grid-cols-2 gap-y-3 gap-x-4"><div><p className="text-[11px] text-slate-400 uppercase font-bold">F. Nacimiento</p><p className="text-slate-800 text-sm font-medium">{formatDateLong(viewChild.fechaNacimiento)}</p></div><div><p className="text-[11px] text-slate-400 uppercase font-bold">Sexo</p><p className="text-slate-800 text-sm font-medium">{viewChild.sexo}</p></div><div><p className="text-[11px] text-slate-400 uppercase font-bold">Seguro</p><p className="text-slate-800 text-sm font-medium">{viewChild.seguro}</p></div><div><p className="text-[11px] text-slate-400 uppercase font-bold">Edad</p><p className="text-slate-800 font-bold text-sm">{calculateDetailedAge(viewChild.fechaNacimiento)?.shortFormatted || '-'}</p></div></div></div>
+                <div className="bg-white border border-slate-100 rounded-lg p-4 shadow-sm"><h4 className="text-blue-800 text-sm font-bold flex items-center gap-1.5 mb-3"><MapPin size={16}/> Contacto</h4><div className="grid grid-cols-2 gap-y-3 gap-x-4"><div className="col-span-2"><p className="text-[11px] text-slate-400 uppercase font-bold">Dirección</p><p className="text-slate-800 text-sm font-medium">{viewChild.direccion}</p></div><div><p className="text-[11px] text-slate-400 uppercase font-bold">Localidad</p><p className="text-slate-800 text-sm font-medium">{viewChild.localidad || '-'}</p></div><div><p className="text-[11px] text-slate-400 uppercase font-bold">Distrito</p><p className="text-slate-800 text-sm font-medium">{viewChild.distrito || '-'}</p></div><div><p className="text-[11px] text-slate-400 uppercase font-bold">Departamento</p><p className="text-slate-800 font-medium text-sm">{viewChild.departamento || '-'}</p></div><div><p className="text-[11px] text-slate-400 uppercase font-bold">Provincia</p><p className="text-slate-800 font-medium text-sm">{viewChild.provincia || '-'}</p></div><div><p className="text-[11px] text-slate-400 uppercase font-bold">Responsable</p><p className="text-slate-800 text-sm font-medium">{viewChild.responsable || '-'}</p></div><div><p className="text-[11px] text-slate-400 uppercase font-bold">Teléfono</p><p className="text-slate-800 text-sm font-medium">{viewChild.telefono || '-'}</p></div></div></div>
               </div>
-              <div className="bg-slate-50 p-3 border-t border-slate-200 flex justify-end rounded-b-xl"><button onClick={() => setShowViewModal(false)} className="px-4 py-1.5 text-sm bg-white border border-slate-300 text-slate-700 rounded hover:bg-slate-50 font-medium">Cerrar</button></div>
+              <div className="bg-slate-50 p-4 border-t border-slate-200 flex justify-end rounded-b-xl"><button onClick={() => setShowViewModal(false)} className="px-5 py-2 text-sm bg-white border border-slate-300 text-slate-700 rounded hover:bg-slate-50 font-medium">Cerrar</button></div>
            </div>
         </div>
       )}
 
-      <div className="space-y-2">
+      <div className="space-y-3">
          {filtered.length > 0 ? filtered.map(child => (
-              <div key={child.id} className="bg-white p-3 rounded-lg shadow-sm border border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 hover:shadow-md transition-shadow">
-                 <div className="flex items-center gap-3 flex-1">
-                    <div className="w-10 h-10 bg-blue-50 text-blue-700 rounded-full flex items-center justify-center font-bold text-sm shrink-0 border border-blue-100">
+              <div key={child.id} className="bg-white p-4 rounded-lg shadow-sm border border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:shadow-md transition-shadow">
+                 <div className="flex items-center gap-4 flex-1">
+                    <div className="w-12 h-12 bg-blue-50 text-blue-700 rounded-full flex items-center justify-center font-bold text-lg shrink-0 border border-blue-100">
                        {child.nombres?.[0] || '-'}
                     </div>
                     <div>
-                      <div className="flex items-center gap-2 mb-1">
-                         <h3 className="font-bold text-sm text-slate-800">{child.nombres} {child.apellidos}</h3>
-                         {child.anemia && <span className="bg-red-50 text-red-700 border border-red-200 text-[10px] px-1.5 py-0.5 rounded-full font-bold flex items-center"><Droplet size={10} className="mr-0.5 fill-current"/> Anemia</span>}
+                      <div className="flex items-center gap-2 mb-1.5">
+                         <h3 className="font-bold text-base text-slate-800">{child.nombres} {child.apellidos}</h3>
+                         {child.anemia && <span className="bg-red-50 text-red-700 border border-red-200 text-[11px] px-2 py-0.5 rounded-full font-bold flex items-center"><Droplet size={12} className="mr-1 fill-current"/> Anemia</span>}
                       </div>
-                      <div className="flex flex-wrap items-center gap-1.5">
-                         <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border border-slate-200 bg-slate-50 text-slate-600 text-[10px] font-semibold">
-                            <CreditCard size={10} className="text-slate-400"/> {child.dni}
+                      <div className="flex flex-wrap items-center gap-2">
+                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-slate-200 bg-slate-50 text-slate-600 text-[11px] font-semibold">
+                            <CreditCard size={12} className="text-slate-400"/> {child.dni}
                          </span>
-                         <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border border-slate-200 bg-slate-50 text-slate-600 text-[10px] font-semibold">
-                            <FileText size={10} className="text-slate-400"/> {child.historiaClinica || 'Sin HC'}
+                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-slate-200 bg-slate-50 text-slate-600 text-[11px] font-semibold">
+                            <FileText size={12} className="text-slate-400"/> {child.historiaClinica || 'Sin HC'}
                          </span>
-                         <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border border-blue-100 bg-blue-50 text-blue-700 text-[10px] font-bold">
-                            <Calendar size={10} className="text-blue-500"/> {new Date(child.fechaNacimiento + 'T00:00:00').toLocaleDateString('es-PE', {day: '2-digit', month: 'short', year: 'numeric'})}
+                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-blue-100 bg-blue-50 text-blue-700 text-[11px] font-bold">
+                            <Calendar size={12} className="text-blue-500"/> {new Date(child.fechaNacimiento + 'T00:00:00').toLocaleDateString('es-PE', {day: '2-digit', month: 'short', year: 'numeric'})}
                             <span className="mx-0.5 text-blue-300">|</span>
-                            <Clock size={10} className="text-blue-500"/> {calculateDetailedAge(child.fechaNacimiento)?.shortFormatted || '-'}
+                            <Clock size={12} className="text-blue-500"/> {calculateDetailedAge(child.fechaNacimiento)?.shortFormatted || '-'}
                          </span>
                       </div>
                     </div>
                  </div>
                  
-                 <div className="flex justify-center items-center gap-1.5 shrink-0 w-full sm:w-auto mt-2 sm:mt-0">
-                    <button onClick={() => handleView(child)} className="flex-1 sm:flex-none p-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors border border-blue-100" title="Ver">
-                      <Eye size={16} />
+                 <div className="flex justify-center items-center gap-2 shrink-0 w-full sm:w-auto mt-3 sm:mt-0">
+                    <button onClick={() => handleView(child)} className="flex-1 sm:flex-none p-2.5 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors border border-blue-100" title="Ver">
+                      <Eye size={18} />
                     </button>
-                    <button onClick={() => handleEdit(child)} className="flex-1 sm:flex-none p-2 bg-amber-50 text-amber-700 rounded-lg hover:bg-amber-100 transition-colors border border-amber-100" title="Editar">
-                      <Edit size={16} />
+                    <button onClick={() => handleEdit(child)} className="flex-1 sm:flex-none p-2.5 bg-amber-50 text-amber-700 rounded-lg hover:bg-amber-100 transition-colors border border-amber-100" title="Editar">
+                      <Edit size={18} />
                     </button>
-                    <button onClick={() => initiateDelete(child)} className="flex-1 sm:flex-none p-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors border border-red-100" title="Eliminar">
-                      <Trash size={16} />
+                    <button onClick={() => initiateDelete(child)} className="flex-1 sm:flex-none p-2.5 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors border border-red-100" title="Eliminar">
+                      <Trash size={18} />
                     </button>
                  </div>
               </div>
             )) : (
-              <div className="text-center p-8 text-sm text-slate-500 bg-white rounded-lg shadow-sm border border-slate-100">
+              <div className="text-center p-10 text-sm text-slate-500 bg-white rounded-lg shadow-sm border border-slate-100">
                  No se encontraron pacientes.
               </div>
          )}
@@ -815,99 +817,104 @@ const ModuloCRED = ({ children, setChildren, showToast }) => {
 
   const renderIcon = (type, done) => {
     const colorClass = done ? "text-white" : (type.includes("drop") ? "text-red-500" : "text-orange-500");
-    if (type === "drop") return <Droplet size={16} className={colorClass} fill={done ? "currentColor" : "none"} />;
-    if (type === "drop_plus") return <div className="relative"><Droplet size={16} className={colorClass} /><Plus size={10} className={`absolute -right-1 -top-1 ${colorClass}`} strokeWidth={3} /></div>;
-    if (type === "drop_check") return <div className="relative"><Droplet size={16} className={colorClass} /><Check size={10} className={`absolute -right-1 -top-1 ${colorClass}`} strokeWidth={3} /></div>;
-    if (type === "pill") return <Circle size={16} className={colorClass} />;
-    return <Circle size={16} className={colorClass} />;
+    if (type === "drop") return <Droplet size={18} className={colorClass} fill={done ? "currentColor" : "none"} />;
+    if (type === "drop_plus") return <div className="relative"><Droplet size={18} className={colorClass} /><Plus size={10} className={`absolute -right-1 -top-1 ${colorClass}`} strokeWidth={3} /></div>;
+    if (type === "drop_check") return <div className="relative"><Droplet size={18} className={colorClass} /><Check size={10} className={`absolute -right-1 -top-1 ${colorClass}`} strokeWidth={3} /></div>;
+    if (type === "pill") return <Circle size={18} className={colorClass} />;
+    return <Circle size={18} className={colorClass} />;
   };
 
   const esquema = GENERAR_ESQUEMA_SUPLEMENTOS(supplementType6to11);
 
   return (
-    <div className="space-y-4 w-full">
+    <div className="space-y-5 w-full">
       {!selectedChild ? (
          <div className="w-full">
-           <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 mb-4">
-              <h2 className="text-lg font-bold text-slate-800 mb-3">Control CRED</h2>
-              <div className="relative max-w-xl"><Search className="absolute left-3 top-2 text-slate-400" size={16} /><input type="text" placeholder="Buscar DNI o Nombre..." className="w-full pl-9 pr-3 py-1.5 text-sm border border-slate-200 rounded-lg focus:ring-1 focus:ring-purple-400 focus:outline-none" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} /></div>
-              <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-slate-100"><span className="text-[11px] font-bold text-slate-500 flex items-center mr-1 uppercase"><Filter size={12} className="mr-1"/> Filtros:</span>{[{ id: 'todos', label: 'Todos' }, { id: 'hoy', label: 'Citas Hoy' }, { id: 'proximo', label: 'Próximos' }, { id: 'vencido', label: 'Vencidos' }, { id: 'sin_cita', label: 'Sin Cita' }].map(f => (<button key={f.id} onClick={() => setFilterCita(f.id)} className={`px-2.5 py-1 rounded-md text-xs font-bold transition-colors border ${filterCita === f.id ? 'bg-purple-50 text-purple-700 border-purple-200' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}>{f.label}</button>))}</div>
+           <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 mb-5">
+              <h2 className="text-xl font-bold text-slate-800 mb-3">Control CRED</h2>
+              <div className="relative max-w-xl"><Search className="absolute left-3 top-2.5 text-slate-400" size={18} /><input type="text" placeholder="Buscar DNI o Nombre..." className="w-full pl-10 pr-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-1 focus:ring-purple-400 focus:outline-none" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} /></div>
+              <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-slate-100"><span className="text-xs font-bold text-slate-500 flex items-center mr-1 uppercase"><Filter size={14} className="mr-1"/> Filtros:</span>{[{ id: 'todos', label: 'Todos' }, { id: 'hoy', label: 'Citas Hoy' }, { id: 'proximo', label: 'Próximos' }, { id: 'vencido', label: 'Vencidos' }, { id: 'sin_cita', label: 'Sin Cita' }].map(f => (<button key={f.id} onClick={() => setFilterCita(f.id)} className={`px-3 py-1 rounded-md text-xs font-bold transition-colors border ${filterCita === f.id ? 'bg-purple-50 text-purple-700 border-purple-200' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}>{f.label}</button>))}</div>
            </div>
-           <div className="space-y-2">
+           <div className="space-y-3">
                {filteredPatients.length > 0 ? filteredPatients.map(child => (
-                    <div key={child.id} className="bg-white p-3 rounded-lg shadow-sm border border-slate-100 flex justify-between items-center gap-3 hover:shadow-md transition-shadow">
-                       <div className="flex items-center gap-3 flex-1">
-                          <div className="w-10 h-10 bg-purple-50 text-purple-700 rounded-full flex items-center justify-center font-bold text-sm shrink-0 border border-purple-100">{child.nombres?.[0] || '-'}</div>
+                    <div key={child.id} className="bg-white p-4 rounded-lg shadow-sm border border-slate-100 flex justify-between items-center gap-4 hover:shadow-md transition-shadow">
+                       <div className="flex items-center gap-4 flex-1">
+                          <div className="w-12 h-12 bg-purple-50 text-purple-700 rounded-full flex items-center justify-center font-bold text-base shrink-0 border border-purple-100">{child.nombres?.[0] || '-'}</div>
                           <div>
-                            <div className="flex items-center gap-2 mb-1">
-                               <h3 className="font-bold text-sm text-slate-800">{child.nombres} {child.apellidos}</h3>
-                               {child.anemia && <span className="bg-red-50 text-red-700 border border-red-200 text-[10px] px-1.5 py-0.5 rounded-full font-bold flex items-center"><Droplet size={10} className="mr-0.5 fill-current"/> Anemia</span>}
+                            <div className="flex items-center gap-2 mb-1.5">
+                               <h3 className="font-bold text-base text-slate-800">{child.nombres} {child.apellidos}</h3>
+                               {child.anemia && <span className="bg-red-50 text-red-700 border border-red-200 text-[11px] px-2 py-0.5 rounded-full font-bold flex items-center"><Droplet size={12} className="mr-1 fill-current"/> Anemia</span>}
                             </div>
-                            <div className="flex flex-wrap items-center gap-1.5">
-                               <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border border-slate-200 bg-slate-50 text-slate-600 text-[10px] font-semibold"><CreditCard size={10} className="text-slate-400"/> {child.dni}</span>
-                               <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border border-slate-200 bg-slate-50 text-slate-600 text-[10px] font-semibold"><FileText size={10} className="text-slate-400"/> {child.historiaClinica || 'Sin HC'}</span>
-                               <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border border-purple-100 bg-purple-50 text-purple-700 text-[10px] font-bold">
-                                  <Calendar size={10} className="text-purple-500"/> {new Date(child.fechaNacimiento + 'T00:00:00').toLocaleDateString('es-PE', {day: '2-digit', month: 'short', year: 'numeric'})}
+                            <div className="flex flex-wrap items-center gap-2">
+                               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-slate-200 bg-slate-50 text-slate-600 text-[11px] font-semibold"><CreditCard size={12} className="text-slate-400"/> {child.dni}</span>
+                               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-slate-200 bg-slate-50 text-slate-600 text-[11px] font-semibold"><FileText size={12} className="text-slate-400"/> {child.historiaClinica || 'Sin HC'}</span>
+                               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-purple-100 bg-purple-50 text-purple-700 text-[11px] font-bold shadow-sm">
+                                  <Calendar size={12} className="text-purple-500"/> {new Date(child.fechaNacimiento + 'T00:00:00').toLocaleDateString('es-PE', {day: '2-digit', month: 'short', year: 'numeric'})}
                                   <span className="mx-0.5 text-purple-300">|</span>
-                                  <Clock size={10} className="text-purple-500"/> {calculateDetailedAge(child.fechaNacimiento)?.shortFormatted || '-'}
+                                  <Clock size={12} className="text-purple-500"/> {calculateDetailedAge(child.fechaNacimiento)?.shortFormatted || '-'}
                                </span>
                             </div>
                           </div>
                        </div>
-                       <div className={`px-3 py-1.5 rounded-lg border ${child.citaStatus.bg} ${child.citaStatus.border} flex flex-col items-center min-w-[110px] shrink-0`}><span className={`text-[10px] font-bold uppercase ${child.citaStatus.color}`}>{child.citaStatus.status === 'sin_cita' ? 'Cita CRED' : child.citaStatus.label}</span><span className={`text-xs font-medium ${child.citaStatus.color}`}>{child.citaStatus.status === 'sin_cita' ? 'No programada' : formatDateLong(child.proximaCita)}</span></div>
-                       <button onClick={() => setSelectedId(child.id)} className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 text-sm font-medium flex items-center gap-1.5 shrink-0 shadow-sm">Atender <ChevronRight size={16}/></button>
+                       <div className={`px-4 py-2 rounded-lg border ${child.citaStatus.bg} ${child.citaStatus.border} flex flex-col items-center min-w-[120px] shrink-0`}><span className={`text-[11px] font-bold uppercase ${child.citaStatus.color}`}>{child.citaStatus.status === 'sin_cita' ? 'Cita CRED' : child.citaStatus.label}</span><span className={`text-sm font-medium ${child.citaStatus.color}`}>{child.citaStatus.status === 'sin_cita' ? 'No programada' : formatDateLong(child.proximaCita)}</span></div>
+                       <button onClick={() => setSelectedId(child.id)} className="bg-purple-600 text-white px-5 py-2.5 rounded-lg hover:bg-purple-700 text-sm font-medium flex items-center gap-1.5 shrink-0 shadow-sm">Atender <ChevronRight size={18}/></button>
                     </div>
-                  )) : <div className="text-center p-8 text-sm text-slate-500 bg-white border border-slate-100 rounded-lg">No se encontraron pacientes.</div>}
+                  )) : <div className="text-center p-10 text-sm text-slate-500 bg-white border border-slate-100 rounded-lg">No se encontraron pacientes.</div>}
            </div>
          </div>
       ) : (
-          <div className="flex flex-col gap-4 animate-fadeIn">
-              <button onClick={() => setSelectedId(null)} className="text-slate-600 hover:text-slate-900 flex items-center gap-1 text-sm font-medium bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm w-fit transition-all hover:bg-slate-50"><ChevronLeft size={16}/> Volver</button>
+          <div className="flex flex-col gap-5 animate-fadeIn">
+              <button onClick={() => setSelectedId(null)} className="text-slate-600 hover:text-slate-900 flex items-center gap-1.5 text-sm font-bold bg-white px-4 py-2 rounded-lg border border-slate-200 shadow-sm w-fit transition-all hover:bg-slate-50"><ChevronLeft size={18}/> Volver</button>
               
-              <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col md:flex-row gap-5 items-start">
+              <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-col md:flex-row gap-6 items-start">
                   <div className={`w-16 h-16 shrink-0 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-sm bg-gradient-to-br ${selectedChild.sexo === 'Femenino' ? 'from-pink-400 to-pink-500' : 'from-blue-400 to-blue-500'}`}>
                       {selectedChild.nombres?.[0] || '-'}
                   </div>
                   <div className="flex-1 w-full pt-1">
                       <h2 className="text-xl font-extrabold text-slate-800 leading-tight">{selectedChild.nombres} {selectedChild.apellidos}</h2>
                       <div className="flex flex-wrap items-center gap-2 mt-2">
-                          <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><FileText size={12} className="text-slate-400"/> <span className="font-bold text-slate-700">HC:</span> {selectedChild.historiaClinica || 'S/N'}</span>
-                          <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><User size={12} className="text-slate-400"/> <span className="font-bold text-slate-700">DNI:</span> {selectedChild.dni}</span>
-                          <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><Calendar size={12} className="text-slate-400"/> <span className="font-bold text-slate-700">F. Nac:</span> {new Date(selectedChild.fechaNacimiento + 'T00:00:00').toLocaleDateString('es-PE', {day: '2-digit', month: 'short', year: 'numeric'})}</span>
-                          <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><Clock size={12} className="text-slate-400"/> <span className="font-bold text-slate-700">Edad:</span> <span className={selectedChild.sexo === 'Femenino' ? 'text-pink-600 font-bold' : 'text-blue-600 font-bold'}>{calculateDetailedAge(selectedChild.fechaNacimiento)?.formatted}</span></span>
-                          <span className={`px-2 py-0.5 rounded border text-[10px] font-bold uppercase ${selectedChild.sexo === 'Femenino' ? 'bg-pink-50 text-pink-700 border-pink-200' : 'bg-blue-50 text-blue-700 border-blue-200'}`}>{selectedChild.seguro}</span>
-                          {selectedChild.anemia && (<span className="px-2 py-0.5 rounded border text-[10px] font-bold uppercase bg-red-50 text-red-700 border-red-200 flex items-center gap-1"><AlertTriangle size={10} className="fill-current"/> Anemia</span>)}
+                          <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><FileText size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">HC:</span> {selectedChild.historiaClinica || 'S/N'}</span>
+                          <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><User size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">DNI:</span> {selectedChild.dni}</span>
+                          <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><Calendar size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">F. Nac:</span> {new Date(selectedChild.fechaNacimiento + 'T00:00:00').toLocaleDateString('es-PE', {day: '2-digit', month: 'short', year: 'numeric'})}</span>
+                          <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><Clock size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">Edad:</span> <span className={selectedChild.sexo === 'Femenino' ? 'text-pink-600 font-bold' : 'text-blue-600 font-bold'}>{calculateDetailedAge(selectedChild.fechaNacimiento)?.formatted}</span></span>
+                          <span className={`px-2 py-0.5 rounded border text-[11px] font-bold uppercase ${selectedChild.sexo === 'Femenino' ? 'bg-pink-50 text-pink-700 border-pink-200' : 'bg-blue-50 text-blue-700 border-blue-200'}`}>{selectedChild.seguro}</span>
+                          {selectedChild.anemia && (<span className="px-2 py-0.5 rounded border text-[11px] font-bold uppercase tracking-wider bg-red-50 text-red-700 border-red-200 flex items-center gap-1"><AlertTriangle size={12} className="fill-current"/> Anemia</span>)}
                       </div>
-                      <div className="flex items-center gap-1 mt-2 text-xs text-slate-500 font-medium"><MapPin size={14} className="text-slate-400" />{selectedChild.direccion} {selectedChild.distrito ? `- ${selectedChild.distrito}` : ''}</div>
+                      <div className="flex items-center gap-1 mt-3 text-xs text-slate-500 font-medium">
+                          <MapPin size={16} className="text-slate-400" />
+                          <span className="font-bold text-slate-600">Localidad:</span> {selectedChild.localidad || '-'} 
+                          <span className="mx-1.5 text-slate-300">|</span> 
+                          <span className="font-bold text-slate-600">Distrito:</span> {selectedChild.distrito || '-'}
+                      </div>
                   </div>
-                  <div className="hidden md:block text-right border-l border-slate-100 pl-4 py-1 min-w-[140px]">
-                      <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">Apoderado</p>
-                      <p className="font-bold text-slate-800 text-sm mb-0.5">{selectedChild.responsable}</p>
-                      <p className={`font-bold text-sm ${selectedChild.sexo === 'Femenino' ? 'text-pink-600' : 'text-blue-600'}`}><Phone size={12} className="inline mr-1"/>{selectedChild.telefono}</p>
+                  <div className="hidden md:block text-right border-l border-slate-100 pl-5 py-1 min-w-[150px]">
+                      <p className="text-[11px] text-slate-400 uppercase font-bold tracking-wider mb-1">Apoderado</p>
+                      <p className="font-bold text-slate-800 text-sm mb-1">{selectedChild.responsable}</p>
+                      <p className={`font-bold text-sm ${selectedChild.sexo === 'Femenino' ? 'text-pink-600' : 'text-blue-600'}`}><Phone size={14} className="inline mr-1"/>{selectedChild.telefono}</p>
                   </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-4">
-                  <div className="flex flex-wrap gap-2 bg-white p-1.5 rounded-lg shadow-sm border border-slate-200">
-                      {[{ id: 'crecimiento', label: 'Controles', icon: Activity }, { id: 'vacunas', label: 'Vacunas', icon: Plus }, { id: 'suplementos', label: 'Suplementos', icon: Circle }, { id: 'citas', label: 'Citas', icon: Calendar }].map(tab => (<button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${activeTab === tab.id ? 'bg-purple-100 text-purple-800' : 'text-slate-600 hover:bg-slate-50'}`}><tab.icon size={16}/> {tab.label}</button>))}
+              <div className="grid grid-cols-1 gap-5">
+                  <div className="flex flex-wrap gap-2 bg-white p-2 rounded-lg shadow-sm border border-slate-200">
+                      {[{ id: 'crecimiento', label: 'Controles', icon: Activity }, { id: 'vacunas', label: 'Vacunas', icon: Plus }, { id: 'suplementos', label: 'Suplementos', icon: Circle }, { id: 'citas', label: 'Citas', icon: Calendar }].map(tab => (<button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === tab.id ? 'bg-purple-100 text-purple-800' : 'text-slate-600 hover:bg-slate-50'}`}><tab.icon size={18}/> {tab.label}</button>))}
                   </div>
                   
-                  <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-200 min-h-[300px]">
+                  <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 min-h-[300px]">
                       {activeTab === 'crecimiento' && (
                         <div className="space-y-6 animate-fadeIn">
-                            <div className="flex items-center gap-2 mb-3 border-b border-slate-100 pb-2">
-                                <h2 className="text-lg font-bold text-purple-800 flex items-center gap-1.5"><Activity size={18}/> Esquema CRED</h2>
-                                <p className="text-xs text-slate-500 ml-auto hidden md:block">Haz clic en los cuadros para registrar atenciones</p>
+                            <div className="flex items-center gap-2 mb-4 border-b border-slate-100 pb-3">
+                                <h2 className="text-xl font-bold text-purple-800 flex items-center gap-1.5"><Activity size={20}/> Esquema CRED</h2>
+                                <p className="text-sm text-slate-500 ml-auto hidden md:block">Haz clic en los cuadros para registrar atenciones</p>
                             </div>
                             
-                            <div className="grid grid-cols-1 gap-4">
+                            <div className="grid grid-cols-1 gap-5">
                                 {ESQUEMA_CONTROLES_CRED.map((grupo, idx) => (
                                     <div key={idx} className="border border-slate-200 rounded-xl overflow-hidden bg-white">
-                                        <div className={`bg-${grupo.color}-50 p-3 border-b border-${grupo.color}-100 flex items-center justify-between`}>
-                                            <h3 className={`font-bold text-${grupo.color}-800 text-sm flex items-center gap-1.5`}><CheckCircle size={16}/> {grupo.titulo}</h3>
-                                            <p className={`text-${grupo.color}-600 text-xs font-medium`}>{grupo.subtitulo}</p>
+                                        <div className={`bg-${grupo.color}-50 p-4 border-b border-${grupo.color}-100 flex items-center justify-between`}>
+                                            <h3 className={`font-bold text-${grupo.color}-800 text-base flex items-center gap-1.5`}><CheckCircle size={18}/> {grupo.titulo}</h3>
+                                            <p className={`text-${grupo.color}-600 text-xs font-bold uppercase`}>{grupo.subtitulo}</p>
                                         </div>
-                                        <div className="p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                                        <div className="p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
                                             {grupo.controles.map((control) => {
                                                 const record = selectedChild.cronogramaCred?.[control.id];
                                                 const isDone = !!record;
@@ -915,18 +922,18 @@ const ModuloCRED = ({ children, setChildren, showToast }) => {
                                                     <button 
                                                         key={control.id} 
                                                         onClick={() => setControlModal({ show: true, controlId: control.id, label: control.label, data: { fecha: record?.fecha || new Date().toISOString().split('T')[0], peso: record?.peso || '', talla: record?.talla || '', estadoNutricional: record?.estadoNutricional || 'Normal' } })} 
-                                                        className={`flex flex-col items-center justify-center p-2.5 rounded-lg border-2 transition-all group ${isDone ? `bg-green-50 border-green-400 hover:bg-green-100` : 'bg-white border-slate-200 hover:border-purple-300 shadow-sm'}`}
+                                                        className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all group ${isDone ? `bg-green-50 border-green-400 hover:bg-green-100` : 'bg-white border-slate-200 hover:border-purple-300 shadow-sm'}`}
                                                     >
-                                                        <div className={`text-xs font-bold mb-0.5 ${isDone ? 'text-green-800' : 'text-slate-700 group-hover:text-purple-700'}`}>{control.label}</div>
-                                                        <div className="text-[10px] text-slate-500 text-center mb-1.5">{control.desc}</div>
+                                                        <div className={`text-sm font-bold mb-1 ${isDone ? 'text-green-800' : 'text-slate-700 group-hover:text-purple-700'}`}>{control.label}</div>
+                                                        <div className="text-[11px] text-slate-500 text-center mb-2">{control.desc}</div>
                                                         {isDone ? (
-                                                            <div className="flex flex-col items-center w-full bg-white p-1 rounded border border-green-200">
-                                                                <span className="text-[10px] text-green-700 font-bold block mb-0.5">{formatDateLong(record.fecha)}</span>
-                                                                <div className="flex gap-1.5 text-[10px] font-medium text-slate-600"><span>P: {record.peso}kg</span><span>T: {record.talla}cm</span></div>
+                                                            <div className="flex flex-col items-center w-full bg-white p-1.5 rounded border border-green-200">
+                                                                <span className="text-[11px] text-green-700 font-bold block mb-0.5">{formatDateLong(record.fecha)}</span>
+                                                                <div className="flex gap-1.5 text-[11px] font-medium text-slate-600"><span>P: {record.peso}kg</span><span>T: {record.talla}cm</span></div>
                                                             </div>
                                                         ) : (
-                                                            <div className="w-6 h-6 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 group-hover:bg-purple-50 group-hover:text-purple-500 group-hover:border-purple-200 transition-colors">
-                                                                <Plus size={14} />
+                                                            <div className="w-8 h-8 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 group-hover:bg-purple-50 group-hover:text-purple-500 group-hover:border-purple-200 transition-colors">
+                                                                <Plus size={16} />
                                                             </div>
                                                         )}
                                                     </button>
@@ -939,30 +946,30 @@ const ModuloCRED = ({ children, setChildren, showToast }) => {
                         </div>
                       )}
 
-                      {activeTab === 'vacunas' && (<div className="space-y-4 animate-fadeIn"><h2 className="text-lg font-bold text-purple-800">Vacunación</h2><div className="space-y-3">{ESQUEMA_VACUNACION.map((grupo, idx) => (<div key={idx} className="border border-slate-200 rounded-lg overflow-hidden"><div className="bg-purple-50 px-3 py-2 text-sm font-bold text-purple-800 border-b border-purple-100">{grupo.edad}</div><div className="p-3 grid grid-cols-2 md:grid-cols-4 gap-3">{grupo.vacunas.map((vacuna, vIdx) => (<div key={vIdx}><label className="text-[11px] font-bold text-slate-600 block mb-1 uppercase">{vacuna}</label><input type="date" className={`border border-slate-200 p-1.5 rounded text-xs w-full focus:ring-1 focus:ring-purple-400 outline-none ${selectedChild.vacunas?.[vacuna] ? 'bg-green-50 border-green-300 text-green-800 font-medium' : 'bg-white'}`} value={selectedChild.vacunas?.[vacuna] || ''} onChange={(e) => handleVaccineChange(vacuna, e.target.value)} /></div>))}</div></div>))}</div></div>)}
+                      {activeTab === 'vacunas' && (<div className="space-y-5 animate-fadeIn"><h2 className="text-xl font-bold text-purple-800">Vacunación</h2><div className="space-y-4">{ESQUEMA_VACUNACION.map((grupo, idx) => (<div key={idx} className="border border-slate-200 rounded-lg overflow-hidden"><div className="bg-purple-50 px-4 py-2.5 text-sm font-bold text-purple-800 border-b border-purple-100">{grupo.edad}</div><div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4">{grupo.vacunas.map((vacuna, vIdx) => (<div key={vIdx}><label className="text-[11px] font-bold text-slate-600 block mb-1.5 uppercase">{vacuna}</label><input type="date" className={`border border-slate-200 p-2 rounded text-sm w-full focus:ring-1 focus:ring-purple-400 outline-none ${selectedChild.vacunas?.[vacuna] ? 'bg-green-50 border-green-300 text-green-800 font-medium' : 'bg-white'}`} value={selectedChild.vacunas?.[vacuna] || ''} onChange={(e) => handleVaccineChange(vacuna, e.target.value)} /></div>))}</div></div>))}</div></div>)}
                       
                       {activeTab === 'suplementos' && (
-                        <div className="space-y-5 animate-fadeIn">
-                            <div className="flex items-center gap-2 mb-2">
-                                <h2 className="text-lg font-bold text-purple-800 flex items-center gap-1.5"><Circle size={18}/> Suplementos</h2>
+                        <div className="space-y-6 animate-fadeIn">
+                            <div className="flex items-center gap-2 mb-3">
+                                <h2 className="text-xl font-bold text-purple-800 flex items-center gap-1.5"><Circle size={20}/> Suplementos</h2>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 {esquema.map((etapa, idx) => (
                                     <div key={idx} className={`border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm ${idx === 2 ? 'md:row-span-2' : ''}`}>
-                                        <div className={`bg-${etapa.color}-50 p-3 border-b border-${etapa.color}-100 flex justify-between items-center`}>
-                                            <div><h3 className={`font-bold text-${etapa.color}-800 text-sm`}>{etapa.titulo}</h3><p className={`text-${etapa.color}-600 text-[10px] font-medium uppercase tracking-wider`}>{etapa.subtitulo}</p></div>
-                                            {etapa.hasToggle && (<div className="flex bg-white rounded flex-shrink-0 border border-slate-200"><button onClick={() => setSupplementType6to11('Hierro')} className={`px-2 py-1 text-[10px] font-bold rounded-l ${supplementType6to11 === 'Hierro' ? 'bg-blue-600 text-white' : 'text-slate-500 hover:bg-slate-50'}`}>Hierro</button><button onClick={() => setSupplementType6to11('MMN')} className={`px-2 py-1 text-[10px] font-bold rounded-r ${supplementType6to11 === 'MMN' ? 'bg-purple-600 text-white' : 'text-slate-500 hover:bg-slate-50'}`}>MMN</button></div>)}
+                                        <div className={`bg-${etapa.color}-50 p-4 border-b border-${etapa.color}-100 flex justify-between items-center`}>
+                                            <div><h3 className={`font-bold text-${etapa.color}-800 text-base`}>{etapa.titulo}</h3><p className={`text-${etapa.color}-600 text-[11px] font-bold uppercase tracking-wider`}>{etapa.subtitulo}</p></div>
+                                            {etapa.hasToggle && (<div className="flex bg-white rounded flex-shrink-0 border border-slate-200"><button onClick={() => setSupplementType6to11('Hierro')} className={`px-3 py-1.5 text-[11px] font-bold rounded-l ${supplementType6to11 === 'Hierro' ? 'bg-blue-600 text-white' : 'text-slate-500 hover:bg-slate-50'}`}>Hierro</button><button onClick={() => setSupplementType6to11('MMN')} className={`px-3 py-1.5 text-[11px] font-bold rounded-r ${supplementType6to11 === 'MMN' ? 'bg-purple-600 text-white' : 'text-slate-500 hover:bg-slate-50'}`}>MMN</button></div>)}
                                         </div>
-                                        <div className="p-3 grid grid-cols-2 gap-3">
+                                        <div className="p-4 grid grid-cols-2 gap-4">
                                             {etapa.hitos.map((hito) => {
                                                 const record = selectedChild.cronogramaSuplementos?.[hito.id];
                                                 const isDone = !!record;
                                                 return (
-                                                    <button key={hito.id} onClick={() => handleHitoClick(hito)} className={`flex flex-col items-center justify-center p-2.5 rounded-lg border-2 transition-all ${isDone ? `bg-green-50 border-green-400` : 'bg-white border-slate-200 hover:border-slate-300 shadow-sm'}`}>
-                                                        <div className="text-xs font-bold text-slate-700 mb-1">{hito.label}</div>
-                                                        <div className={`mb-1 ${isDone ? 'scale-110 transition-transform' : ''}`}>{renderIcon(hito.icon, isDone)}</div>
-                                                        <div className="text-[10px] text-slate-500 text-center leading-tight mb-1">{hito.desc}</div>
-                                                        {isDone && (<div className="mt-0.5 flex flex-col items-center"><div className="flex items-center text-[10px] text-green-700 font-bold"><CheckCircle size={10} className="mr-0.5"/> {formatDateLong(record.fecha)}</div>{record.hb && <div className="text-[10px] text-blue-700 font-bold mt-0.5 bg-blue-100 px-1.5 rounded">Hb: {record.hb}</div>}</div>)}
+                                                    <button key={hito.id} onClick={() => handleHitoClick(hito)} className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all ${isDone ? `bg-green-50 border-green-400` : 'bg-white border-slate-200 hover:border-slate-300 shadow-sm'}`}>
+                                                        <div className="text-sm font-bold text-slate-700 mb-1.5">{hito.label}</div>
+                                                        <div className={`mb-1.5 ${isDone ? 'scale-110 transition-transform' : ''}`}>{renderIcon(hito.icon, isDone)}</div>
+                                                        <div className="text-[11px] text-slate-500 text-center leading-tight mb-1.5">{hito.desc}</div>
+                                                        {isDone && (<div className="mt-1 flex flex-col items-center"><div className="flex items-center text-[11px] text-green-700 font-bold"><CheckCircle size={12} className="mr-1"/> {formatDateLong(record.fecha)}</div>{record.hb && <div className="text-[11px] text-blue-700 font-bold mt-1 bg-blue-100 px-2 py-0.5 rounded">Hb: {record.hb}</div>}</div>)}
                                                     </button>
                                                 );
                                             })}
@@ -973,7 +980,7 @@ const ModuloCRED = ({ children, setChildren, showToast }) => {
                         </div>
                       )}
                       
-                      {activeTab === 'citas' && (<div className="space-y-4 animate-fadeIn"><h2 className="text-lg font-bold text-purple-800">Agendar Cita (CRED)</h2><div className="flex gap-2 max-w-sm"><input type="date" className="border border-slate-200 p-2 rounded-lg w-full text-sm outline-none focus:ring-1 focus:ring-purple-400" value={newCita} onChange={(e) => setNewCita(e.target.value)} /><button onClick={handleUpdateCita} className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm hover:bg-blue-700">Agendar</button></div></div>)}
+                      {activeTab === 'citas' && (<div className="space-y-4 animate-fadeIn"><h2 className="text-xl font-bold text-purple-800">Agendar Cita (CRED)</h2><div className="flex gap-3 max-w-sm"><input type="date" className="border border-slate-200 p-2 rounded-lg w-full text-sm outline-none focus:ring-1 focus:ring-purple-400" value={newCita} onChange={(e) => setNewCita(e.target.value)} /><button onClick={handleUpdateCita} className="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium shadow-sm hover:bg-blue-700">Agendar</button></div></div>)}
                   </div>
               </div>
           </div>
@@ -982,32 +989,32 @@ const ModuloCRED = ({ children, setChildren, showToast }) => {
       {/* MODAL REGISTRO CONTROL CRED (PESO/TALLA) */}
       {controlModal.show && (
         <div className="fixed inset-0 bg-slate-900/60 z-[70] flex justify-center items-center p-4">
-          <div className="bg-white rounded-xl shadow-2xl p-5 w-full max-w-xs animate-fadeIn">
-            <h3 className="text-base font-bold text-purple-900 mb-3 border-b border-purple-100 pb-2 flex items-center gap-1.5"><Activity size={18}/> {controlModal.label}</h3>
-            <form onSubmit={handleSaveControl} className="space-y-3">
+          <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm animate-fadeIn">
+            <h3 className="text-lg font-bold text-purple-900 mb-4 border-b border-purple-100 pb-2 flex items-center gap-1.5"><Activity size={20}/> {controlModal.label}</h3>
+            <form onSubmit={handleSaveControl} className="space-y-4">
               <div>
-                 <label className="block text-xs font-bold text-slate-600 mb-1">Fecha</label>
-                 <input type="date" required className="w-full border border-slate-300 p-2 rounded-md focus:ring-1 focus:ring-purple-400 outline-none text-sm" value={controlModal.data.fecha} onChange={(e) => setControlModal({...controlModal, data: { ...controlModal.data, fecha: e.target.value }})} />
+                 <label className="block text-xs font-bold text-slate-600 mb-1.5">Fecha</label>
+                 <input type="date" required className="w-full border border-slate-300 p-2.5 rounded-md focus:ring-1 focus:ring-purple-400 outline-none text-sm" value={controlModal.data.fecha} onChange={(e) => setControlModal({...controlModal, data: { ...controlModal.data, fecha: e.target.value }})} />
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-4">
                  <div>
-                    <label className="block text-xs font-bold text-slate-600 mb-1">Peso (kg)</label>
-                    <input type="number" step="0.01" required placeholder="Ej: 8.5" className="w-full border border-slate-300 p-2 rounded-md focus:ring-1 focus:ring-purple-400 outline-none text-sm" value={controlModal.data.peso} onChange={(e) => setControlModal({...controlModal, data: { ...controlModal.data, peso: e.target.value }})} />
+                    <label className="block text-xs font-bold text-slate-600 mb-1.5">Peso (kg)</label>
+                    <input type="number" step="0.01" required placeholder="Ej: 8.5" className="w-full border border-slate-300 p-2.5 rounded-md focus:ring-1 focus:ring-purple-400 outline-none text-sm" value={controlModal.data.peso} onChange={(e) => setControlModal({...controlModal, data: { ...controlModal.data, peso: e.target.value }})} />
                  </div>
                  <div>
-                    <label className="block text-xs font-bold text-slate-600 mb-1">Talla (cm)</label>
-                    <input type="number" step="0.1" required placeholder="Ej: 70.5" className="w-full border border-slate-300 p-2 rounded-md focus:ring-1 focus:ring-purple-400 outline-none text-sm" value={controlModal.data.talla} onChange={(e) => setControlModal({...controlModal, data: { ...controlModal.data, talla: e.target.value }})} />
+                    <label className="block text-xs font-bold text-slate-600 mb-1.5">Talla (cm)</label>
+                    <input type="number" step="0.1" required placeholder="Ej: 70.5" className="w-full border border-slate-300 p-2.5 rounded-md focus:ring-1 focus:ring-purple-400 outline-none text-sm" value={controlModal.data.talla} onChange={(e) => setControlModal({...controlModal, data: { ...controlModal.data, talla: e.target.value }})} />
                  </div>
               </div>
               <div>
-                 <label className="block text-xs font-bold text-slate-600 mb-1">Estado</label>
-                 <select required className="w-full border border-slate-300 p-2 rounded-md focus:ring-1 focus:ring-purple-400 outline-none text-sm font-medium text-slate-700" value={controlModal.data.estadoNutricional} onChange={(e) => setControlModal({...controlModal, data: { ...controlModal.data, estadoNutricional: e.target.value }})}>
+                 <label className="block text-xs font-bold text-slate-600 mb-1.5">Estado</label>
+                 <select required className="w-full border border-slate-300 p-2.5 rounded-md focus:ring-1 focus:ring-purple-400 outline-none text-sm font-medium text-slate-700" value={controlModal.data.estadoNutricional} onChange={(e) => setControlModal({...controlModal, data: { ...controlModal.data, estadoNutricional: e.target.value }})}>
                     <option>Normal</option><option>Riesgo de Desnutrición</option><option>Desnutrición Leve</option><option>Desnutrición Severa</option><option>Sobrepeso</option><option>Obesidad</option>
                  </select>
               </div>
-              <div className="flex gap-2 pt-3 border-t border-slate-100">
-                 <button type="button" onClick={() => setControlModal({ show: false, controlId: null, label: '', data: { fecha: '', peso: '', talla: '', estadoNutricional: 'Normal' } })} className="flex-1 px-3 py-1.5 bg-slate-100 rounded-md text-slate-700 text-sm font-medium hover:bg-slate-200">Cancelar</button>
-                 <button type="submit" className="flex-1 px-3 py-1.5 bg-purple-600 text-white rounded-md text-sm font-medium hover:bg-purple-700 shadow-sm">Guardar</button>
+              <div className="flex gap-3 pt-4 border-t border-slate-100">
+                 <button type="button" onClick={() => setControlModal({ show: false, controlId: null, label: '', data: { fecha: '', peso: '', talla: '', estadoNutricional: 'Normal' } })} className="flex-1 px-4 py-2 bg-slate-100 rounded-md text-slate-700 text-sm font-medium hover:bg-slate-200">Cancelar</button>
+                 <button type="submit" className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-md text-sm font-medium hover:bg-purple-700 shadow-sm">Guardar</button>
               </div>
             </form>
           </div>
@@ -1017,12 +1024,12 @@ const ModuloCRED = ({ children, setChildren, showToast }) => {
       {/* MODAL REGISTRO HITO SUPLEMENTOS */}
       {hitoModal.show && (
         <div className="fixed inset-0 bg-slate-900/60 z-[70] flex justify-center items-center p-4">
-          <div className="bg-white rounded-xl shadow-2xl p-5 w-full max-w-xs animate-fadeIn">
-            <h3 className="text-base font-bold text-slate-800 mb-3 border-b border-slate-100 pb-2">{hitoModal.hito?.label}</h3>
-            <div className="space-y-3">
-              <div><label className="block text-xs font-bold mb-1 text-slate-600">Fecha</label><input type="date" className="w-full border border-slate-300 p-2 rounded-md text-sm outline-none focus:ring-1 focus:ring-blue-400" value={hitoModal.data.fecha} onChange={(e) => setHitoModal({...hitoModal, data: { ...hitoModal.data, fecha: e.target.value }})} /></div>
-              {hitoModal.hito?.reqHb && (<div><label className="block text-xs font-bold mb-1 text-blue-700 flex items-center gap-1"><Droplet size={12}/> Valor Hb</label><input type="number" step="0.1" placeholder="Ej: 11.5" className="w-full border border-slate-300 p-2 rounded-md text-sm outline-none focus:ring-1 focus:ring-blue-400" value={hitoModal.data.hb} onChange={(e) => setHitoModal({...hitoModal, data: { ...hitoModal.data, hb: e.target.value }})} /></div>)}
-              <div className="flex gap-2 pt-2"><button onClick={() => setHitoModal({ show: false, hito: null, data: {} })} className="flex-1 px-3 py-1.5 text-sm bg-slate-100 rounded-md text-slate-700 font-medium">Cancelar</button><button onClick={saveHito} className="flex-1 px-3 py-1.5 text-sm bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700">Guardar</button></div>
+          <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-xs animate-fadeIn">
+            <h3 className="text-lg font-bold text-slate-800 mb-4 border-b border-slate-100 pb-2">{hitoModal.hito?.label}</h3>
+            <div className="space-y-4">
+              <div><label className="block text-xs font-bold mb-1.5 text-slate-600">Fecha</label><input type="date" className="w-full border border-slate-300 p-2.5 rounded-md text-sm outline-none focus:ring-1 focus:ring-blue-400" value={hitoModal.data.fecha} onChange={(e) => setHitoModal({...hitoModal, data: { ...hitoModal.data, fecha: e.target.value }})} /></div>
+              {hitoModal.hito?.reqHb && (<div><label className="block text-xs font-bold mb-1.5 text-blue-700 flex items-center gap-1.5"><Droplet size={14}/> Valor Hb</label><input type="number" step="0.1" placeholder="Ej: 11.5" className="w-full border border-slate-300 p-2.5 rounded-md text-sm outline-none focus:ring-1 focus:ring-blue-400" value={hitoModal.data.hb} onChange={(e) => setHitoModal({...hitoModal, data: { ...hitoModal.data, hb: e.target.value }})} /></div>)}
+              <div className="flex gap-3 pt-3"><button onClick={() => setHitoModal({ show: false, hito: null, data: {} })} className="flex-1 px-4 py-2 text-sm bg-slate-100 rounded-md text-slate-700 font-medium">Cancelar</button><button onClick={saveHito} className="flex-1 px-4 py-2 text-sm bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700">Guardar</button></div>
             </div>
           </div>
         </div>
@@ -1151,118 +1158,129 @@ const ModuloAnemia = ({ children, setChildren, showToast }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-4 md:p-5 w-full border border-slate-100">
-      <h2 className="text-lg font-bold text-red-700 mb-4 flex items-center gap-1.5"><Droplet className="fill-current" size={18} /> Módulo de Anemia</h2>
+    <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 w-full border border-slate-100">
+      <h2 className="text-xl font-bold text-red-700 mb-5 flex items-center gap-1.5"><Droplet className="fill-current" size={20} /> Seguimiento de Anemia</h2>
       
       {!selectedChild ? (
         <div className="w-full">
-           <div className="bg-red-50/50 p-5 rounded-xl shadow-sm text-center mb-5 border border-red-100">
-              <div className="relative max-w-xl mx-auto"><Search className="absolute left-3 top-2 text-slate-400" size={16} /><input type="text" placeholder="DNI o Nombres..." className="w-full pl-9 pr-3 py-1.5 border border-slate-200 rounded-lg focus:ring-1 focus:ring-red-400 focus:outline-none text-sm bg-white" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} autoFocus /></div>
+           <div className="bg-red-50/50 p-6 rounded-xl shadow-sm text-center mb-6 border border-red-100">
+              <div className="relative max-w-xl mx-auto"><Search className="absolute left-3 top-2.5 text-slate-400" size={18} /><input type="text" placeholder="DNI o Nombres..." className="w-full pl-10 pr-3 py-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-red-400 focus:outline-none text-sm bg-white" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} autoFocus /></div>
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 mt-4 pt-4 border-t border-red-100 justify-center">
                 <div className="flex items-center gap-1.5">
-                   <span className="text-[11px] font-bold text-red-800 flex items-center uppercase tracking-wider"><User size={12} className="mr-1"/> Estado:</span>
-                   <select className="border border-red-200 text-red-800 bg-white rounded-md px-2 py-1 text-xs font-medium outline-none focus:ring-1 focus:ring-red-400 shadow-sm" value={filterEstado} onChange={(e) => setFilterEstado(e.target.value)}><option value="todos">Todos</option><option value="activos">Activos</option><option value="alta">De Alta</option></select>
+                   <span className="text-xs font-bold text-red-800 flex items-center uppercase tracking-wider"><User size={14} className="mr-1"/> Estado:</span>
+                   <select className="border border-red-200 text-red-800 bg-white rounded-md px-3 py-1.5 text-xs font-medium outline-none focus:ring-1 focus:ring-red-400 shadow-sm" value={filterEstado} onChange={(e) => setFilterEstado(e.target.value)}><option value="todos">Todos</option><option value="activos">Activos</option><option value="alta">De Alta</option></select>
                 </div>
                 <div className="hidden sm:block w-px bg-red-200"></div>
                 <div className="flex flex-wrap items-center gap-1.5">
-                   <span className="text-[11px] font-bold text-red-800 flex items-center mr-1 uppercase tracking-wider"><Filter size={12} className="mr-1"/> Citas:</span>
+                   <span className="text-xs font-bold text-red-800 flex items-center mr-1 uppercase tracking-wider"><Filter size={14} className="mr-1"/> Citas:</span>
                    {[{ id: 'todos', label: 'Todas' }, { id: 'hoy', label: 'Hoy' }, { id: 'proximo', label: 'Próximas' }, { id: 'vencido', label: 'Vencidas' }].map(f => (
-                     <button key={f.id} onClick={() => setFilterCita(f.id)} className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors ${filterCita === f.id ? 'bg-red-600 text-white shadow-sm' : 'bg-white text-red-700 border border-red-200 hover:bg-red-50'}`}>{f.label}</button>
+                     <button key={f.id} onClick={() => setFilterCita(f.id)} className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-colors ${filterCita === f.id ? 'bg-red-600 text-white shadow-sm' : 'bg-white text-red-700 border border-red-200 hover:bg-red-50'}`}>{f.label}</button>
                    ))}
                 </div>
               </div>
            </div>
            
-           <div className="space-y-2">
+           <div className="space-y-3">
              {filteredPatients.length > 0 ? filteredPatients.map(child => {
                 const isAlta = !child.anemia && child.tratamientosAnemiaPrevios?.length > 0;
                 return (
-                 <div key={child.id} className={`bg-white p-3 rounded-lg shadow-sm border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 hover:shadow-md transition-shadow ${isAlta ? 'border-green-200' : child.anemia ? 'border-red-200' : 'border-slate-100'}`}>
-                   <div className="flex items-center gap-3 flex-1">
-                     <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shrink-0 border ${child.anemia ? 'bg-red-50 text-red-600 border-red-100' : (isAlta ? 'bg-green-50 text-green-600 border-green-100' : 'bg-slate-50 text-slate-600 border-slate-200')}`}>{child.nombres?.[0] || '-'}</div>
+                 <div key={child.id} className={`bg-white p-4 rounded-lg shadow-sm border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:shadow-md transition-shadow ${isAlta ? 'border-green-200' : child.anemia ? 'border-red-200' : 'border-slate-100'}`}>
+                   <div className="flex items-center gap-4 flex-1">
+                     <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-base shrink-0 border ${child.anemia ? 'bg-red-50 text-red-600 border-red-100' : (isAlta ? 'bg-green-50 text-green-600 border-green-100' : 'bg-slate-50 text-slate-600 border-slate-200')}`}>{child.nombres?.[0] || '-'}</div>
                      <div>
-                       <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-bold text-sm text-slate-800">{child.nombres} {child.apellidos}</h3>
+                       <div className="flex items-center gap-2 mb-1.5">
+                          <h3 className="font-bold text-base text-slate-800">{child.nombres} {child.apellidos}</h3>
                           {child.anemia ? (
-                             <span className="bg-red-50 text-red-700 text-[10px] px-1.5 py-0.5 rounded border border-red-200 font-bold flex items-center"><AlertTriangle size={10} className="mr-1"/> Entr. {(child.tratamientoAnemia?.entregas || []).filter(Boolean).length}/6</span>
+                             <span className="bg-red-50 text-red-700 text-[11px] px-2 py-0.5 rounded-full font-bold flex items-center"><AlertTriangle size={12} className="mr-1"/> Entr. {(child.tratamientoAnemia?.entregas || []).filter(Boolean).length}/6</span>
                           ) : (isAlta ? (
-                             <span className="bg-green-50 text-green-700 text-[10px] px-1.5 py-0.5 rounded border border-green-200 font-bold flex items-center"><CheckCircle size={10} className="mr-1"/> De Alta</span>
+                             <span className="bg-green-50 text-green-700 text-[11px] px-2 py-0.5 rounded-full font-bold flex items-center"><CheckCircle size={12} className="mr-1"/> De Alta</span>
                           ) : null)}
                        </div>
-                       <div className="flex flex-wrap items-center gap-1.5">
-                          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border border-slate-200 bg-slate-50 text-slate-600 text-[10px] font-semibold"><CreditCard size={10} className="text-slate-400"/> {child.dni}</span>
-                          <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[10px] font-bold ${child.anemia ? 'bg-red-50 text-red-700 border-red-100' : (isAlta ? 'bg-green-50 text-green-700 border-green-100' : 'bg-blue-50 text-blue-700 border-blue-100')}`}>
-                             <Calendar size={10} className="opacity-70"/> {new Date(child.fechaNacimiento + 'T00:00:00').toLocaleDateString('es-PE', {day: '2-digit', month: 'short', year: 'numeric'})}
+                       <div className="flex flex-wrap items-center gap-2">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-slate-200 bg-slate-50 text-slate-600 text-[11px] font-semibold"><CreditCard size={12} className="text-slate-400"/> {child.dni}</span>
+                          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[11px] font-bold ${child.anemia ? 'bg-red-50 text-red-700 border-red-100' : (isAlta ? 'bg-green-50 text-green-700 border-green-100' : 'bg-blue-50 text-blue-700 border-blue-100')}`}>
+                             <Calendar size={12} className="opacity-70"/> {new Date(child.fechaNacimiento + 'T00:00:00').toLocaleDateString('es-PE', {day: '2-digit', month: 'short', year: 'numeric'})}
                              <span className="mx-0.5 opacity-40">|</span>
-                             <Clock size={10} className="opacity-70"/> {calculateDetailedAge(child.fechaNacimiento)?.shortFormatted || '-'}
+                             <Clock size={12} className="opacity-70"/> {calculateDetailedAge(child.fechaNacimiento)?.shortFormatted || '-'}
                           </span>
                        </div>
                      </div>
                    </div>
                    
-                   <div className={`px-3 py-1.5 rounded-lg border ${child.citaStatus.bg} ${child.citaStatus.border} flex flex-col items-center min-w-[110px] w-full sm:w-auto shrink-0`}>
-                      <span className={`text-[10px] font-bold uppercase ${child.citaStatus.color}`}>{child.citaStatus.status === 'sin_cita' ? 'Cita Anemia' : child.citaStatus.label}</span>
-                      <span className={`text-xs font-medium ${child.citaStatus.color}`}>{child.citaStatus.status === 'sin_cita' ? 'No programada' : formatDateLong(child.proximaCitaAnemia)}</span>
+                   <div className={`px-4 py-2 rounded-lg border ${child.citaStatus.bg} ${child.citaStatus.border} flex flex-col items-center min-w-[120px] w-full sm:w-auto shrink-0`}>
+                      <span className={`text-[11px] font-bold uppercase ${child.citaStatus.color}`}>{child.citaStatus.status === 'sin_cita' ? 'Cita Anemia' : child.citaStatus.label}</span>
+                      <span className={`text-sm font-medium ${child.citaStatus.color}`}>{child.citaStatus.status === 'sin_cita' ? 'No programada' : formatDateLong(child.proximaCitaAnemia)}</span>
                    </div>
 
-                   <button onClick={() => { setSelectedId(child.id); setSearchTerm(''); setActiveTab(child.anemia ? 'tratamiento' : (isAlta ? 'tratamientos_previos' : 'historial')); }} className={`w-full sm:w-auto px-4 py-2 rounded-lg text-sm font-medium flex justify-center items-center gap-1.5 shadow-sm whitespace-nowrap shrink-0 ${child.anemia ? 'bg-red-600 text-white hover:bg-red-700' : (isAlta ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-blue-600 text-white hover:bg-blue-700')}`}>
-                     {child.anemia ? 'Seguimiento' : (isAlta ? 'Historial' : 'Tamizaje')} <ChevronRight size={16}/>
+                   <button onClick={() => { setSelectedId(child.id); setSearchTerm(''); setActiveTab(child.anemia ? 'tratamiento' : (isAlta ? 'tratamientos_previos' : 'historial')); }} className={`w-full sm:w-auto px-5 py-2.5 rounded-lg text-sm font-medium flex justify-center items-center gap-1.5 shadow-sm whitespace-nowrap shrink-0 ${child.anemia ? 'bg-red-600 text-white hover:bg-red-700' : (isAlta ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-blue-600 text-white hover:bg-blue-700')}`}>
+                     {child.anemia ? 'Seguimiento' : (isAlta ? 'Historial' : 'Tamizaje')} <ChevronRight size={18}/>
                    </button>
                  </div>
                )
-             }) : <div className="text-center p-6 text-sm text-slate-500">No hay pacientes con estos filtros</div>}
+             }) : <div className="text-center p-10 text-sm text-slate-500">No hay pacientes con estos filtros</div>}
            </div>
         </div>
       ) : (
         <div className="animate-fadeIn">
-          <button onClick={() => setSelectedId(null)} className="mb-3 text-slate-600 hover:text-slate-900 flex items-center gap-1 text-xs font-bold bg-white px-3 py-1.5 rounded border border-slate-200 shadow-sm w-fit transition-all hover:bg-slate-50">
-              <ChevronLeft size={14}/> Volver
+          <button onClick={() => setSelectedId(null)} className="mb-4 text-slate-600 hover:text-slate-900 flex items-center gap-1.5 text-sm font-bold bg-white px-4 py-2 rounded-lg border border-slate-200 shadow-sm w-fit transition-all hover:bg-slate-50">
+              <ChevronLeft size={16}/> Volver
           </button>
           
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col md:flex-row gap-5 items-start mb-5">
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-col md:flex-row gap-6 items-start mb-5">
               <div className={`w-16 h-16 shrink-0 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-sm bg-gradient-to-br ${selectedChild.sexo === 'Femenino' ? 'from-pink-400 to-pink-500' : 'from-blue-400 to-blue-500'}`}>
                   {selectedChild.nombres?.[0] || '-'}
               </div>
               <div className="flex-1 w-full pt-1">
                   <h2 className="text-xl font-extrabold text-slate-800 leading-tight">{selectedChild.nombres} {selectedChild.apellidos}</h2>
                   <div className="flex flex-wrap items-center gap-2 mt-2">
-                      <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><FileText size={12} className="text-slate-400"/> <span className="font-bold text-slate-700">HC:</span> {selectedChild.historiaClinica || 'S/N'}</span>
-                      <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><User size={12} className="text-slate-400"/> <span className="font-bold text-slate-700">DNI:</span> {selectedChild.dni}</span>
-                      <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><Calendar size={12} className="text-slate-400"/> <span className="font-bold text-slate-700">F. Nac:</span> {new Date(selectedChild.fechaNacimiento + 'T00:00:00').toLocaleDateString('es-PE', {day: '2-digit', month: 'short', year: 'numeric'})}</span>
-                      <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><Clock size={12} className="text-slate-400"/> <span className="font-bold text-slate-700">Edad:</span> <span className={selectedChild.sexo === 'Femenino' ? 'text-pink-600 font-bold' : 'text-blue-600 font-bold'}>{calculateDetailedAge(selectedChild.fechaNacimiento)?.formatted}</span></span>
-                      {selectedChild.anemia && (<span className="px-2 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider bg-red-50 text-red-700 border-red-200 flex items-center gap-1"><AlertTriangle size={10} className="fill-current"/> Anemia</span>)}
-                      {selectedChild.tratamientosAnemiaPrevios?.length > 0 && !selectedChild.anemia && (<span className="px-2 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider bg-green-50 text-green-700 border-green-200 flex items-center gap-1"><CheckCircle size={10} className="fill-current"/> De Alta</span>)}
-                      <span className={`px-2 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 ${selectedChild.anemia ? 'bg-red-50 text-red-700 border-red-200' : 'bg-blue-50 text-blue-700 border-blue-200'}`}>
-                          <Droplet size={10} className="fill-current"/> Hb: {selectedChild.hemoglobina || '-'}
+                      <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><FileText size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">HC:</span> {selectedChild.historiaClinica || 'S/N'}</span>
+                      <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><User size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">DNI:</span> {selectedChild.dni}</span>
+                      <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><Calendar size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">F. Nac:</span> {new Date(selectedChild.fechaNacimiento + 'T00:00:00').toLocaleDateString('es-PE', {day: '2-digit', month: 'short', year: 'numeric'})}</span>
+                      <span className="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs text-slate-600"><Clock size={14} className="text-slate-400"/> <span className="font-bold text-slate-700">Edad:</span> <span className={selectedChild.sexo === 'Femenino' ? 'text-pink-600 font-bold' : 'text-blue-600 font-bold'}>{calculateDetailedAge(selectedChild.fechaNacimiento)?.formatted}</span></span>
+                      {selectedChild.anemia && (<span className="px-2 py-0.5 rounded border text-[11px] font-bold uppercase tracking-wider bg-red-50 text-red-700 border-red-200 flex items-center gap-1"><AlertTriangle size={12} className="fill-current"/> Anemia</span>)}
+                      {selectedChild.tratamientosAnemiaPrevios?.length > 0 && !selectedChild.anemia && (<span className="px-2 py-0.5 rounded border text-[11px] font-bold uppercase tracking-wider bg-green-50 text-green-700 border-green-200 flex items-center gap-1"><CheckCircle size={12} className="fill-current"/> De Alta</span>)}
+                      <span className={`px-2 py-0.5 rounded border text-[11px] font-bold uppercase tracking-wider flex items-center gap-1 ${selectedChild.anemia ? 'bg-red-50 text-red-700 border-red-200' : 'bg-blue-50 text-blue-700 border-blue-200'}`}>
+                          <Droplet size={12} className="fill-current"/> Hb: {selectedChild.hemoglobina || '-'}
                       </span>
                   </div>
+                  <div className="flex items-center gap-1 mt-3 text-xs text-slate-500 font-medium">
+                      <MapPin size={16} className="text-slate-400" />
+                      <span className="font-bold text-slate-600">Localidad:</span> {selectedChild.localidad || '-'} 
+                      <span className="mx-1.5 text-slate-300">|</span> 
+                      <span className="font-bold text-slate-600">Distrito:</span> {selectedChild.distrito || '-'}
+                  </div>
+              </div>
+              <div className="hidden md:block text-right border-l border-slate-100 pl-5 py-1 min-w-[150px]">
+                  <p className="text-[11px] text-slate-400 uppercase font-bold tracking-wider mb-1">Apoderado</p>
+                  <p className="font-bold text-slate-800 text-sm mb-1">{selectedChild.responsable}</p>
+                  <p className={`font-bold text-sm ${selectedChild.sexo === 'Femenino' ? 'text-pink-600' : 'text-blue-600'}`}><Phone size={14} className="inline mr-1"/>{selectedChild.telefono}</p>
               </div>
           </div>
 
-          <div className="flex flex-wrap gap-2 mb-4 bg-white p-1.5 rounded-lg border border-slate-200 shadow-sm">
-              {selectedChild.anemia && <button onClick={() => setActiveTab('tratamiento')} className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${activeTab === 'tratamiento' ? 'bg-red-100 text-red-800' : 'text-slate-600 hover:bg-slate-50'}`}>Tratamiento</button>}
-              <button onClick={() => setActiveTab('historial')} className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${activeTab === 'historial' ? 'bg-red-100 text-red-800' : 'text-slate-600 hover:bg-slate-50'}`}>Historial Hb</button>
-              <button onClick={() => setActiveTab('tratamientos_previos')} className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors flex items-center gap-1.5 ${activeTab === 'tratamientos_previos' ? 'bg-red-100 text-red-800' : 'text-slate-600 hover:bg-slate-50'}`}><Archive size={14}/> Altas Previas</button>
-              <button onClick={() => setActiveTab('citas')} className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${activeTab === 'citas' ? 'bg-red-100 text-red-800' : 'text-slate-600 hover:bg-slate-50'}`}>Agendar</button>
+          <div className="flex flex-wrap gap-2 mb-4 bg-white p-2 rounded-lg border border-slate-200 shadow-sm">
+              {selectedChild.anemia && <button onClick={() => setActiveTab('tratamiento')} className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === 'tratamiento' ? 'bg-red-100 text-red-800' : 'text-slate-600 hover:bg-slate-50'}`}>Tratamiento</button>}
+              <button onClick={() => setActiveTab('historial')} className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === 'historial' ? 'bg-red-100 text-red-800' : 'text-slate-600 hover:bg-slate-50'}`}>Historial Hb</button>
+              <button onClick={() => setActiveTab('tratamientos_previos')} className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1.5 ${activeTab === 'tratamientos_previos' ? 'bg-red-100 text-red-800' : 'text-slate-600 hover:bg-slate-50'}`}><Archive size={16}/> Altas Previas</button>
+              <button onClick={() => setActiveTab('citas')} className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === 'citas' ? 'bg-red-100 text-red-800' : 'text-slate-600 hover:bg-slate-50'}`}>Agendar</button>
           </div>
 
-          <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-200 min-h-[300px]">
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 min-h-[300px]">
           {activeTab === 'tratamiento' && (
              selectedChild.anemia ? (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 animate-fadeIn">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fadeIn">
                   <div className="md:col-span-1 space-y-4">
-                    <div className="bg-red-50 p-4 rounded-lg border border-red-100">
-                      <h4 className="font-bold text-red-800 text-sm flex items-center gap-1.5 mb-2"><AlertTriangle size={16}/> Activo</h4>
-                      <div className="space-y-1.5 text-xs text-red-900">
+                    <div className="bg-red-50 p-5 rounded-lg border border-red-100">
+                      <h4 className="font-bold text-red-800 text-sm flex items-center gap-1.5 mb-3"><AlertTriangle size={18}/> Activo</h4>
+                      <div className="space-y-2 text-sm text-red-900">
                         <div className="flex justify-between"><span>Inicio:</span> <span className="font-bold">{formatDateLong(selectedChild.tratamientoAnemia?.inicio)}</span></div>
                         <div className="flex justify-between"><span>Tipo:</span> <span className="font-bold">{selectedChild.tipoAnemia}</span></div>
                       </div>
                     </div>
-                    <button onClick={() => { setAltaForm({ fecha: new Date().toISOString().split('T')[0], recuperado: true }); setAltaModal(true); }} className="w-full border-2 border-green-500 text-green-700 font-bold py-1.5 rounded-lg text-sm hover:bg-green-50 transition-colors">Dar de Alta</button>
+                    <button onClick={() => { setAltaForm({ fecha: new Date().toISOString().split('T')[0], recuperado: true }); setAltaModal(true); }} className="w-full border-2 border-green-500 text-green-700 font-bold py-2 rounded-lg text-sm hover:bg-green-50 transition-colors">Dar de Alta</button>
                   </div>
                   <div className="md:col-span-2">
-                    <h4 className="font-bold text-slate-800 text-sm mb-3 flex items-center gap-1.5"><Circle className="text-blue-500" size={16}/> Esquema 6 Meses</h4>
-                    <div className="grid grid-cols-3 gap-3">
+                    <h4 className="font-bold text-slate-800 text-base mb-4 flex items-center gap-1.5"><Circle className="text-blue-500" size={18}/> Esquema 6 Meses</h4>
+                    <div className="grid grid-cols-3 gap-4">
                       {[...Array(6)].map((_, i) => {
                         const entregado = selectedChild.tratamientoAnemia?.entregas?.[i];
                         const isCompleted = !!entregado;
@@ -1271,22 +1289,22 @@ const ModuloAnemia = ({ children, setChildren, showToast }) => {
                         const eTalla = typeof entregado === 'object' ? entregado?.talla : null;
 
                         return (
-                          <button key={i} onClick={() => promptEntrega(i)} className={`p-3 rounded-xl border flex flex-col items-center justify-center transition-all ${isCompleted ? 'border-green-400 bg-green-50 hover:bg-green-100' : 'border-slate-200 hover:border-blue-300 bg-white shadow-sm'}`}>
-                            <span className={`text-[10px] font-bold uppercase mb-1.5 tracking-wider ${isCompleted ? 'text-green-700' : 'text-slate-400'}`}>Entrega {i + 1}</span>
+                          <button key={i} onClick={() => promptEntrega(i)} className={`p-4 rounded-xl border flex flex-col items-center justify-center transition-all ${isCompleted ? 'border-green-400 bg-green-50 hover:bg-green-100' : 'border-slate-200 hover:border-blue-300 bg-white shadow-sm'}`}>
+                            <span className={`text-[11px] font-bold uppercase mb-2 tracking-wider ${isCompleted ? 'text-green-700' : 'text-slate-400'}`}>Entrega {i + 1}</span>
                             {isCompleted ? (
                                 <>
-                                    <CheckCircle size={24} className="text-green-500 mb-1"/>
-                                    <span className="text-[10px] font-bold text-green-800">{formatDateLong(eFecha)}</span>
+                                    <CheckCircle size={28} className="text-green-500 mb-1.5"/>
+                                    <span className="text-xs font-bold text-green-800">{formatDateLong(eFecha)}</span>
                                     {(ePeso || eTalla) && (
-                                        <span className="text-[9px] text-green-700 mt-1 bg-green-100/50 px-1.5 py-0.5 rounded border border-green-200 font-medium">
+                                        <span className="text-[10px] text-green-700 mt-1.5 bg-green-100/50 px-2 py-0.5 rounded border border-green-200 font-medium">
                                             {ePeso ? `${ePeso}kg ` : ''}{ePeso && eTalla ? '| ' : ''}{eTalla ? `${eTalla}cm` : ''}
                                         </span>
                                     )}
                                 </>
                             ) : (
                                 <>
-                                    <div className="w-6 h-6 rounded-full border border-dashed border-slate-300 mb-1 flex items-center justify-center text-slate-400 font-bold text-[10px]">{i + 1}</div>
-                                    <span className="text-[10px] text-blue-600 font-bold">Registrar</span>
+                                    <div className="w-8 h-8 rounded-full border border-dashed border-slate-300 mb-1.5 flex items-center justify-center text-slate-400 font-bold text-[11px]">{i + 1}</div>
+                                    <span className="text-[11px] text-blue-600 font-bold">Registrar</span>
                                 </>
                             )}
                           </button>
@@ -1296,52 +1314,52 @@ const ModuloAnemia = ({ children, setChildren, showToast }) => {
                   </div>
                 </div>
              ) : (
-                <div className="text-center py-10 bg-slate-50 rounded-lg border border-dashed border-slate-200">
-                    <CheckCircle size={36} className="mx-auto text-green-400 mb-3"/>
-                    <h3 className="text-sm font-bold text-slate-700">Sin Anemia Activa</h3>
-                    <p className="text-xs text-slate-500">El paciente no requiere tratamiento.</p>
+                <div className="text-center py-12 bg-slate-50 rounded-lg border border-dashed border-slate-200">
+                    <CheckCircle size={48} className="mx-auto text-green-400 mb-4"/>
+                    <h3 className="text-base font-bold text-slate-700">Sin Anemia Activa</h3>
+                    <p className="text-sm text-slate-500">El paciente no requiere tratamiento.</p>
                 </div>
              )
           )}
 
           {activeTab === 'historial' && (
-              <div className="space-y-5 animate-fadeIn">
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-3">
-                      <div className="flex justify-between items-center mb-2">
-                          <h3 className="font-bold text-slate-700 text-sm flex items-center gap-1.5"><Activity size={16}/> {editHbIndex !== null ? 'Editar Registro' : 'Nuevo Control Hb'}</h3>
-                          {editHbIndex !== null && <button onClick={cancelEditHb} className="text-[10px] font-bold text-red-600 uppercase tracking-wider">Cancelar Edición</button>}
+              <div className="space-y-6 animate-fadeIn">
+                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+                      <div className="flex justify-between items-center mb-3">
+                          <h3 className="font-bold text-slate-700 text-sm flex items-center gap-1.5"><Activity size={18}/> {editHbIndex !== null ? 'Editar Registro' : 'Nuevo Control Hb'}</h3>
+                          {editHbIndex !== null && <button onClick={cancelEditHb} className="text-[11px] font-bold text-red-600 uppercase tracking-wider">Cancelar Edición</button>}
                       </div>
-                      <form onSubmit={handleAddHbControl} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-2 items-end">
-                          <div className="md:col-span-1"><label className="block text-[10px] font-bold text-slate-500 mb-0.5 uppercase">Fecha</label><input type="date" className="w-full border border-slate-300 p-1.5 rounded text-sm outline-none focus:ring-1 focus:ring-blue-400" value={hbControl.fecha} onChange={e => setHbControl({...hbControl, fecha: e.target.value})} required/></div>
-                          <div className="md:col-span-1"><label className="block text-[10px] font-bold text-slate-500 mb-0.5 uppercase">Valor Hb</label><input type="number" step="0.1" className="w-full border border-slate-300 p-1.5 rounded text-sm outline-none focus:ring-1 focus:ring-blue-400" placeholder="11.5" value={hbControl.hb} onChange={e => setHbControl({...hbControl, hb: e.target.value})} required/></div>
-                          <div className="md:col-span-1"><label className="block text-[10px] font-bold text-slate-500 mb-0.5 uppercase">Tipo</label><select className="w-full border border-slate-300 p-1.5 rounded text-sm outline-none focus:ring-1 focus:ring-blue-400" value={hbControl.tipo} onChange={e => setHbControl({...hbControl, tipo: e.target.value})}><option>Tamizaje</option><option>Control</option><option>Diagnóstico</option><option>Alta</option></select></div>
-                          <div className="md:col-span-1"><label className="block text-[10px] font-bold text-slate-500 mb-0.5 uppercase">Diagnóstico</label><select className="w-full border border-slate-300 p-1.5 rounded text-sm outline-none focus:ring-1 focus:ring-blue-400 font-medium text-slate-700" value={hbControl.resultado} onChange={e => setHbControl({...hbControl, resultado: e.target.value})}><option value="Normal">Normal</option><option value="Anemia Leve">Anemia Leve</option><option value="Anemia Moderada">Anemia Moderada</option><option value="Anemia Severa">Anemia Severa</option></select></div>
-                          <div className="md:col-span-1"><label className="block text-[10px] font-bold text-slate-500 mb-0.5 uppercase">Observación</label><input className="w-full border border-slate-300 p-1.5 rounded text-sm outline-none focus:ring-1 focus:ring-blue-400" placeholder="Opcional" value={hbControl.observacion} onChange={e => setHbControl({...hbControl, observacion: e.target.value})}/></div>
-                          <button className={`text-white px-3 py-1.5 rounded text-sm font-bold md:col-span-1 ${editHbIndex !== null ? 'bg-amber-600 hover:bg-amber-700' : 'bg-blue-600 hover:bg-blue-700'}`}>{editHbIndex !== null ? 'Actualizar' : 'Guardar'}</button>
+                      <form onSubmit={handleAddHbControl} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-3 items-end">
+                          <div className="md:col-span-1"><label className="block text-[11px] font-bold text-slate-500 mb-1 uppercase">Fecha</label><input type="date" className="w-full border border-slate-300 p-2 rounded text-sm outline-none focus:ring-1 focus:ring-blue-400" value={hbControl.fecha} onChange={e => setHbControl({...hbControl, fecha: e.target.value})} required/></div>
+                          <div className="md:col-span-1"><label className="block text-[11px] font-bold text-slate-500 mb-1 uppercase">Valor Hb</label><input type="number" step="0.1" className="w-full border border-slate-300 p-2 rounded text-sm outline-none focus:ring-1 focus:ring-blue-400" placeholder="11.5" value={hbControl.hb} onChange={e => setHbControl({...hbControl, hb: e.target.value})} required/></div>
+                          <div className="md:col-span-1"><label className="block text-[11px] font-bold text-slate-500 mb-1 uppercase">Tipo</label><select className="w-full border border-slate-300 p-2 rounded text-sm outline-none focus:ring-1 focus:ring-blue-400" value={hbControl.tipo} onChange={e => setHbControl({...hbControl, tipo: e.target.value})}><option>Tamizaje</option><option>Control</option><option>Diagnóstico</option><option>Alta</option></select></div>
+                          <div className="md:col-span-1"><label className="block text-[11px] font-bold text-slate-500 mb-1 uppercase">Diagnóstico</label><select className="w-full border border-slate-300 p-2 rounded text-sm outline-none focus:ring-1 focus:ring-blue-400 font-medium text-slate-700" value={hbControl.resultado} onChange={e => setHbControl({...hbControl, resultado: e.target.value})}><option value="Normal">Normal</option><option value="Anemia Leve">Anemia Leve</option><option value="Anemia Moderada">Anemia Moderada</option><option value="Anemia Severa">Anemia Severa</option></select></div>
+                          <div className="md:col-span-1"><label className="block text-[11px] font-bold text-slate-500 mb-1 uppercase">Observación</label><input className="w-full border border-slate-300 p-2 rounded text-sm outline-none focus:ring-1 focus:ring-blue-400" placeholder="Opcional" value={hbControl.observacion} onChange={e => setHbControl({...hbControl, observacion: e.target.value})}/></div>
+                          <button className={`text-white px-4 py-2 rounded text-sm font-bold md:col-span-1 ${editHbIndex !== null ? 'bg-amber-600 hover:bg-amber-700' : 'bg-blue-600 hover:bg-blue-700'}`}>{editHbIndex !== null ? 'Actualizar' : 'Guardar'}</button>
                       </form>
                   </div>
 
                   <div className="border border-slate-200 rounded-lg overflow-hidden">
                       <table className="w-full text-left">
-                          <thead className="bg-slate-100 text-[10px] uppercase text-slate-500 font-bold tracking-wider"><tr><th className="p-2.5">Fecha</th><th className="p-2.5">Hb</th><th className="p-2.5">Estado</th><th className="p-2.5">Tipo</th><th className="p-2.5">Obs</th><th className="p-2.5 text-center">Acciones</th></tr></thead>
-                          <tbody className="text-xs text-slate-700 divide-y divide-slate-100">
+                          <thead className="bg-slate-100 text-[11px] uppercase text-slate-500 font-bold tracking-wider"><tr><th className="p-3">Fecha</th><th className="p-3">Hb</th><th className="p-3">Estado</th><th className="p-3">Tipo</th><th className="p-3">Obs</th><th className="p-3 text-center">Acciones</th></tr></thead>
+                          <tbody className="text-sm text-slate-700 divide-y divide-slate-100">
                               {selectedChild.historialAnemia && selectedChild.historialAnemia.length > 0 ? (
                                   [...selectedChild.historialAnemia].reverse().map((reg, idx) => (
                                       <tr key={idx} className="hover:bg-slate-50">
-                                          <td className="p-2.5">{formatDateLong(reg.fecha)}</td>
-                                          <td className="p-2.5 font-bold text-blue-700">{reg.hb}</td>
-                                          <td className="p-2.5 font-medium">{reg.resultado || (reg.hb < 11 ? 'Anemia' : 'Normal')}</td>
-                                          <td className="p-2.5">{reg.tipo}</td>
-                                          <td className="p-2.5 text-slate-400 truncate max-w-[100px]">{reg.observacion || '-'}</td>
-                                          <td className="p-2.5 text-center">
-                                              <div className="flex items-center justify-center gap-1.5">
-                                                  <button onClick={() => editHbControl(idx)} className="text-amber-600 hover:bg-amber-100 p-1 rounded" title="Editar"><Edit size={14}/></button>
-                                                  <button onClick={() => deleteHbControl(idx)} className="text-red-600 hover:bg-red-100 p-1 rounded" title="Eliminar"><Trash size={14}/></button>
+                                          <td className="p-3">{formatDateLong(reg.fecha)}</td>
+                                          <td className="p-3 font-bold text-blue-700">{reg.hb}</td>
+                                          <td className="p-3 font-medium">{reg.resultado || (reg.hb < 11 ? 'Anemia' : 'Normal')}</td>
+                                          <td className="p-3">{reg.tipo}</td>
+                                          <td className="p-3 text-slate-400 truncate max-w-[120px]">{reg.observacion || '-'}</td>
+                                          <td className="p-3 text-center">
+                                              <div className="flex items-center justify-center gap-2">
+                                                  <button onClick={() => editHbControl(idx)} className="text-amber-600 hover:bg-amber-100 p-1 rounded" title="Editar"><Edit size={16}/></button>
+                                                  <button onClick={() => deleteHbControl(idx)} className="text-red-600 hover:bg-red-100 p-1 rounded" title="Eliminar"><Trash size={16}/></button>
                                               </div>
                                           </td>
                                       </tr>
                                   ))
-                              ) : <tr><td colSpan="6" className="p-4 text-center text-slate-400 italic text-xs">Sin registros históricos</td></tr>}
+                              ) : <tr><td colSpan="6" className="p-5 text-center text-slate-400 italic text-sm">Sin registros históricos</td></tr>}
                           </tbody>
                       </table>
                   </div>
@@ -1349,38 +1367,38 @@ const ModuloAnemia = ({ children, setChildren, showToast }) => {
           )}
 
           {activeTab === 'tratamientos_previos' && (
-             <div className="space-y-4 animate-fadeIn">
-               <h3 className="text-sm font-bold text-slate-800">Historial de Tratamientos Pasados</h3>
+             <div className="space-y-5 animate-fadeIn">
+               <h3 className="text-base font-bold text-slate-800">Historial de Tratamientos Pasados</h3>
                {selectedChild.tratamientosAnemiaPrevios?.length > 0 ? (
                   selectedChild.tratamientosAnemiaPrevios.map((trat, idx) => (
-                    <div key={idx} className="bg-white border border-green-200 rounded-xl p-4 shadow-sm">
-                       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 border-b border-slate-100 pb-2 gap-2">
+                    <div key={idx} className="bg-white border border-green-200 rounded-xl p-5 shadow-sm">
+                       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 border-b border-slate-100 pb-3 gap-3">
                           <div className="flex items-center gap-2">
-                            <span className="font-bold text-slate-800 text-sm">Trat. #{idx + 1}</span>
-                            <span className="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded text-[10px] font-bold uppercase">{trat.tipo || 'Anemia'}</span>
-                            <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase ${trat.recuperado !== false ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+                            <span className="font-bold text-slate-800 text-base">Trat. #{idx + 1}</span>
+                            <span className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-[11px] font-bold uppercase">{trat.tipo || 'Anemia'}</span>
+                            <span className={`px-2 py-0.5 rounded text-[11px] font-bold uppercase ${trat.recuperado !== false ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
                               {trat.recuperado !== false ? 'Recuperado' : 'No Recuperado'}
                             </span>
                           </div>
-                          <div className="flex items-center gap-2 text-xs">
-                            <span className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100 font-medium"><span className="text-slate-400">Inicio:</span> {formatDateLong(trat.inicio)}</span>
-                            <ChevronRight size={14} className="text-slate-300"/>
-                            <span className="bg-green-50 text-green-700 px-2 py-0.5 rounded border border-green-100 font-medium"><span className="text-slate-400">Alta:</span> {formatDateLong(trat.fechaAlta)}</span>
+                          <div className="flex items-center gap-2 text-sm">
+                            <span className="bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded border border-blue-100 font-medium"><span className="text-slate-400">Inicio:</span> {formatDateLong(trat.inicio)}</span>
+                            <ChevronRight size={16} className="text-slate-300"/>
+                            <span className="bg-green-50 text-green-700 px-2.5 py-0.5 rounded border border-green-100 font-medium"><span className="text-slate-400">Alta:</span> {formatDateLong(trat.fechaAlta)}</span>
                           </div>
                        </div>
                        
-                       <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+                       <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
                           {[...Array(6)].map((_, i) => {
                              const entrega = trat.entregas?.[i];
                              const eFecha = typeof entrega === 'string' ? entrega : entrega?.fecha;
                              const ePeso = typeof entrega === 'object' ? entrega?.peso : null;
                              return (
-                                 <div key={i} className={`p-2 rounded border flex flex-col items-center ${entrega ? 'bg-green-50/50 border-green-200' : 'bg-slate-50 border-slate-200'}`}>
-                                    <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">E.{i+1}</div>
-                                    <div className={`text-xs font-bold text-center ${entrega ? 'text-green-700' : 'text-slate-400'}`}>
+                                 <div key={i} className={`p-2.5 rounded-lg border flex flex-col items-center ${entrega ? 'bg-green-50/50 border-green-200' : 'bg-slate-50 border-slate-200'}`}>
+                                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">E.{i+1}</div>
+                                    <div className={`text-sm font-bold text-center ${entrega ? 'text-green-700' : 'text-slate-400'}`}>
                                        {eFecha ? formatDateLong(eFecha) : '-'}
                                     </div>
-                                    {ePeso && <div className="text-[9px] text-green-600 mt-0.5 font-medium">{ePeso}kg</div>}
+                                    {ePeso && <div className="text-[10px] text-green-600 mt-1 font-medium">{ePeso}kg</div>}
                                  </div>
                              )
                           })}
@@ -1388,15 +1406,15 @@ const ModuloAnemia = ({ children, setChildren, showToast }) => {
                     </div>
                   )).reverse()
                ) : (
-                  <div className="text-center py-10 bg-slate-50 rounded-lg border border-dashed border-slate-200">
-                     <Archive size={36} className="mx-auto text-slate-300 mb-2" />
-                     <p className="text-xs text-slate-500 font-medium">Este paciente no tiene historial de altas previas.</p>
+                  <div className="text-center py-12 bg-slate-50 rounded-lg border border-dashed border-slate-200">
+                     <Archive size={42} className="mx-auto text-slate-300 mb-3" />
+                     <p className="text-sm text-slate-500 font-medium">Este paciente no tiene historial de altas previas.</p>
                   </div>
                )}
              </div>
           )}
 
-          {activeTab === 'citas' && (<div className="space-y-4 animate-fadeIn"><h2 className="text-sm font-bold text-purple-800">Agendar Cita</h2><div className="flex gap-2 max-w-sm"><input type="date" className="border border-slate-200 p-1.5 rounded text-sm w-full outline-none focus:ring-1 focus:ring-purple-400" value={newCita} onChange={(e) => setNewCita(e.target.value)} /><button onClick={handleUpdateCita} className="bg-blue-600 text-white px-3 py-1.5 rounded text-sm font-medium hover:bg-blue-700">Agendar</button></div></div>)}
+          {activeTab === 'citas' && (<div className="space-y-5 animate-fadeIn"><h2 className="text-base font-bold text-purple-800">Agendar Cita</h2><div className="flex gap-2 max-w-md"><input type="date" className="border border-slate-200 p-2 rounded-lg text-sm w-full outline-none focus:ring-1 focus:ring-purple-400" value={newCita} onChange={(e) => setNewCita(e.target.value)} /><button onClick={handleUpdateCita} className="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 shadow-sm">Agendar</button></div></div>)}
           </div>
         </div>
       )}
@@ -1404,26 +1422,26 @@ const ModuloAnemia = ({ children, setChildren, showToast }) => {
       {/* Modal para Registrar/Editar Entrega Anemia */}
       {entregaModal.show && (
         <div className="fixed inset-0 bg-slate-900/60 z-[70] flex justify-center items-center p-4">
-          <div className="bg-white rounded-xl shadow-2xl p-5 w-full max-w-xs animate-slideDown">
-            <h3 className="text-base font-bold text-slate-800 mb-3 border-b border-slate-100 pb-2">Entrega #{entregaModal.index + 1}</h3>
-            <div className="space-y-3">
+          <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm animate-slideDown">
+            <h3 className="text-lg font-bold text-slate-800 mb-4 border-b border-slate-100 pb-2">Entrega #{entregaModal.index + 1}</h3>
+            <div className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1">Fecha</label>
-                <input type="date" className="w-full border border-slate-300 p-2 rounded-md outline-none focus:ring-1 focus:ring-blue-400 text-sm" value={entregaModal.fecha} onChange={(e) => setEntregaModal({...entregaModal, fecha: e.target.value})} />
+                <label className="block text-xs font-bold text-slate-600 mb-1.5">Fecha</label>
+                <input type="date" className="w-full border border-slate-300 p-2.5 rounded-md outline-none focus:ring-1 focus:ring-blue-400 text-sm" value={entregaModal.fecha} onChange={(e) => setEntregaModal({...entregaModal, fecha: e.target.value})} />
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-4">
                  <div>
-                    <label className="block text-xs font-bold text-slate-600 mb-1">Peso (kg)</label>
-                    <input type="number" step="0.01" className="w-full border border-slate-300 p-2 rounded-md outline-none focus:ring-1 focus:ring-blue-400 text-sm" placeholder="Ej: 10.5" value={entregaModal.peso} onChange={(e) => setEntregaModal({...entregaModal, peso: e.target.value})} />
+                    <label className="block text-xs font-bold text-slate-600 mb-1.5">Peso (kg)</label>
+                    <input type="number" step="0.01" className="w-full border border-slate-300 p-2.5 rounded-md outline-none focus:ring-1 focus:ring-blue-400 text-sm" placeholder="Ej: 10.5" value={entregaModal.peso} onChange={(e) => setEntregaModal({...entregaModal, peso: e.target.value})} />
                  </div>
                  <div>
-                    <label className="block text-xs font-bold text-slate-600 mb-1">Talla (cm)</label>
-                    <input type="number" step="0.1" className="w-full border border-slate-300 p-2 rounded-md outline-none focus:ring-1 focus:ring-blue-400 text-sm" placeholder="Ej: 75.5" value={entregaModal.talla} onChange={(e) => setEntregaModal({...entregaModal, talla: e.target.value})} />
+                    <label className="block text-xs font-bold text-slate-600 mb-1.5">Talla (cm)</label>
+                    <input type="number" step="0.1" className="w-full border border-slate-300 p-2.5 rounded-md outline-none focus:ring-1 focus:ring-blue-400 text-sm" placeholder="Ej: 75.5" value={entregaModal.talla} onChange={(e) => setEntregaModal({...entregaModal, talla: e.target.value})} />
                  </div>
               </div>
-              <div className="flex gap-2 pt-3 border-t border-slate-100">
-                <button onClick={() => setEntregaModal({ show: false, index: null, fecha: '', peso: '', talla: '' })} className="flex-1 px-3 py-1.5 bg-slate-100 rounded-md text-slate-700 font-medium text-sm">Cancelar</button>
-                <button onClick={confirmEntrega} className="flex-1 px-3 py-1.5 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 text-sm">Guardar</button>
+              <div className="flex gap-3 pt-4 border-t border-slate-100">
+                <button onClick={() => setEntregaModal({ show: false, index: null, fecha: '', peso: '', talla: '' })} className="flex-1 px-4 py-2 bg-slate-100 rounded-md text-slate-700 font-medium text-sm hover:bg-slate-200">Cancelar</button>
+                <button onClick={confirmEntrega} className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 text-sm shadow-sm">Guardar</button>
               </div>
             </div>
           </div>
@@ -1433,28 +1451,28 @@ const ModuloAnemia = ({ children, setChildren, showToast }) => {
       {/* Modal Confirmar Alta */}
       {altaModal && (
         <div className="fixed inset-0 bg-slate-900/60 z-[70] flex justify-center items-center p-4">
-          <div className="bg-white rounded-xl shadow-2xl p-5 w-full max-w-xs animate-slideDown text-center">
-            <CheckCircle className="mx-auto text-green-500 mb-2" size={36} />
-            <h3 className="text-base font-bold text-slate-800 mb-1">Dar de Alta</h3>
-            <p className="text-xs text-slate-500 mb-4">El tratamiento se moverá al Historial.</p>
+          <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm animate-slideDown text-center">
+            <CheckCircle className="mx-auto text-green-500 mb-3" size={42} />
+            <h3 className="text-lg font-bold text-slate-800 mb-1.5">Dar de Alta</h3>
+            <p className="text-sm text-slate-500 mb-5">El tratamiento se moverá al Historial.</p>
             
-            <div className="space-y-3 text-left mb-4">
+            <div className="space-y-4 text-left mb-5">
               <div>
-                <label className="block text-[11px] font-bold text-slate-600 mb-1 uppercase">Fecha de Alta</label>
-                <input type="date" className="w-full border border-slate-300 p-1.5 rounded focus:ring-1 focus:ring-green-400 outline-none text-sm" value={altaForm.fecha} onChange={(e) => setAltaForm({...altaForm, fecha: e.target.value})} />
+                <label className="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Fecha de Alta</label>
+                <input type="date" className="w-full border border-slate-300 p-2.5 rounded-md focus:ring-1 focus:ring-green-400 outline-none text-sm" value={altaForm.fecha} onChange={(e) => setAltaForm({...altaForm, fecha: e.target.value})} />
               </div>
               <div>
-                <label className="block text-[11px] font-bold text-slate-600 mb-1 uppercase">¿Recuperado?</label>
-                <select className="w-full border border-slate-300 p-1.5 rounded focus:ring-1 focus:ring-green-400 outline-none text-sm font-medium" value={altaForm.recuperado} onChange={(e) => setAltaForm({...altaForm, recuperado: e.target.value === 'true'})}>
+                <label className="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">¿Recuperado?</label>
+                <select className="w-full border border-slate-300 p-2.5 rounded-md focus:ring-1 focus:ring-green-400 outline-none text-sm font-medium" value={altaForm.recuperado} onChange={(e) => setAltaForm({...altaForm, recuperado: e.target.value === 'true'})}>
                   <option value="true">Sí, Recuperado</option>
                   <option value="false">No (Abandono/Límite)</option>
                 </select>
               </div>
             </div>
 
-            <div className="flex gap-2">
-              <button onClick={() => setAltaModal(false)} className="flex-1 px-3 py-1.5 bg-slate-100 rounded-md text-slate-700 font-medium text-sm">Cancelar</button>
-              <button onClick={confirmAlta} className="flex-1 px-3 py-1.5 bg-green-600 text-white rounded-md font-medium hover:bg-green-700 text-sm">Confirmar</button>
+            <div className="flex gap-3">
+              <button onClick={() => setAltaModal(false)} className="flex-1 px-4 py-2 bg-slate-100 rounded-md text-slate-700 font-medium text-sm hover:bg-slate-200">Cancelar</button>
+              <button onClick={confirmAlta} className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md font-medium hover:bg-green-700 text-sm shadow-sm">Confirmar</button>
             </div>
           </div>
         </div>
@@ -1463,13 +1481,13 @@ const ModuloAnemia = ({ children, setChildren, showToast }) => {
       {/* Modal Confirmar Eliminación Hb */}
       {deleteHbModal.show && (
         <div className="fixed inset-0 bg-slate-900/60 z-[70] flex justify-center items-center p-4">
-          <div className="bg-white rounded-xl shadow-2xl p-5 w-full max-w-xs animate-slideDown text-center">
-              <AlertTriangle className="mx-auto text-red-500 mb-3" size={36} />
-              <h3 className="text-base font-bold text-slate-800 mb-1">¿Eliminar Registro?</h3>
-              <p className="text-xs text-slate-500 mb-4">Esta acción no se puede deshacer.</p>
-              <div className="flex gap-2">
-                <button onClick={() => setDeleteHbModal({show: false, index: null})} className="flex-1 px-3 py-1.5 bg-slate-100 rounded-md text-slate-700 font-medium text-sm">Cancelar</button>
-                <button onClick={confirmDeleteHb} className="flex-1 px-3 py-1.5 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 text-sm">Eliminar</button>
+          <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm animate-slideDown text-center">
+              <AlertTriangle className="mx-auto text-red-500 mb-4" size={42} />
+              <h3 className="text-lg font-bold text-slate-800 mb-1.5">¿Eliminar Registro?</h3>
+              <p className="text-sm text-slate-500 mb-5">Esta acción no se puede deshacer.</p>
+              <div className="flex gap-3">
+                <button onClick={() => setDeleteHbModal({show: false, index: null})} className="flex-1 px-4 py-2 bg-slate-100 rounded-md text-slate-700 font-medium text-sm hover:bg-slate-200">Cancelar</button>
+                <button onClick={confirmDeleteHb} className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 text-sm shadow-sm">Eliminar</button>
               </div>
           </div>
         </div>
@@ -2209,6 +2227,7 @@ const Configuracion = ({ users, setUsers, appConfig, setAppConfig, children, set
             </div>
         )}
 
+        {/* NUEVO MODAL DE CONFIRMACIÓN: ELIMINAR USUARIO */}
         {userToDelete !== null && (
             <div className="fixed inset-0 bg-slate-900/60 z-[90] flex justify-center items-center p-4">
                 <div className="bg-white rounded-xl shadow-2xl w-full max-w-sm animate-slideDown p-5 text-center border border-slate-200">
@@ -2223,9 +2242,10 @@ const Configuracion = ({ users, setUsers, appConfig, setAppConfig, children, set
             </div>
         )}
 
+        {/* NUEVO MODAL DE ALTA SEGURIDAD: ZONA ROJA */}
         {showClearModal && (
             <div className="fixed inset-0 bg-slate-900/80 z-[100] flex justify-center items-center p-4">
-                <div className="bg-white rounded-xl shadow-2xl w-full max-w-sm animate-slideDown overflow-hidden border border-red-200">
+                <div className="bg-white rounded-xl shadow-2xl w-full max-w-md animate-slideDown overflow-hidden border border-red-200">
                     <div className="bg-red-600 p-3.5 flex justify-between items-center text-white">
                         <h3 className="text-sm font-bold flex items-center gap-1.5"><AlertTriangle size={16}/> Peligro Crítico</h3>
                         <button onClick={() => setShowClearModal(false)} className="hover:bg-red-700 p-1 rounded-md transition-colors"><X size={16}/></button>
