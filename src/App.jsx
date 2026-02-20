@@ -5,7 +5,7 @@ import {
   Phone, MapPin, Calendar, CreditCard, User, ChevronLeft, ChevronRight, 
   Clock, Eye, Edit, Trash, Move, Info, Check, Filter, Circle, Archive, 
   Printer, Settings, Upload, Trash2, Shield, Lock, Mail, Briefcase, 
-  Building, Image as ImageIcon, LogOut, Loader2
+  Building, Image as ImageIcon, LogOut, Loader2, Star, Bug, Bell
 } from 'lucide-react';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
@@ -65,7 +65,17 @@ class ErrorBoundary extends React.Component {
 // --- CONSTANTES Y DATOS POR DEFECTO ---
 const initialData = [];
 const defaultUsers = [{ id: 1, nombre: 'Admin Master', usuario: 'admin', password: '123', rol: 'admin', cargo: 'Jefe de Sistema', establecimiento: 'C.S. Principal', correo: 'admin@minsa.gob.pe', telefono: '999888777', permisos: ['dashboard', 'padron', 'cred', 'anemia', 'reportes', 'configuracion'] }];
-const defaultConfig = { nombreCentro: 'Sistema QaliWawa', slogan: 'Gestión Integral de Salud Infantil', version: '2.6.0', footer: '© 2026 Lic. Axcel Zamudio', logo: null };
+const defaultConfig = { 
+  nombreCentro: 'Sistema QaliWawa', 
+  slogan: 'Gestión Integral de Salud Infantil', 
+  version: '2.6.0', 
+  footer: '© 2026 Lic. Axcel Zamudio', 
+  logo: null,
+  departamentos: ['Lima'],
+  provincias: ['Lima'],
+  distritos: ['Comas', 'Carabayllo', 'Independencia', 'San Martin de Porres'],
+  localidades: ['Sector 1', 'Sector 2', 'AA.HH. Progreso']
+};
 
 const ESQUEMA_VACUNACION = [
   { edad: 'Recién Nacido', vacunas: ['BCG', 'Hepatitis B (HvB)'] },
@@ -86,19 +96,19 @@ const GENERAR_ESQUEMA_SUPLEMENTOS = (tipo6to11) => [
     color: "blue",
     hasToggle: true,
     hitos: tipo6to11 === 'MMN' ? [
-      { id: "6m_hb_entrega", label: "6M", desc: "Entr. Hb", icon: "drop_plus", reqHb: true },
-      { id: "7m_entrega", label: "7M", desc: "2da MMN", icon: "pill", reqHb: true }, 
-      { id: "8m_mmn", label: "8M", desc: "3ra MMN", icon: "pill" },
-      { id: "9m_hb_mmn", label: "9M", desc: "Hb + 4ta MMN", icon: "drop_plus", reqHb: true },
-      { id: "10m_mmn", label: "10M", desc: "5ta MMN", icon: "pill" },
-      { id: "11m_mmn", label: "11M", desc: "6ta MMN", icon: "pill" },
+      { id: "6m_hb_entrega", label: "6M", desc: "1ra MMN (+Hb)", icon: "drop_plus", reqHb: true, n: 1, type: 'mmn' },
+      { id: "6m_vita", label: "6M", desc: "Vit. A (Azul)", icon: "vita_azul", n: 1, type: 'vita' },
+      { id: "7m_entrega", label: "7M", desc: "2da MMN", icon: "pill", reqHb: true, n: 2, type: 'mmn' }, 
+      { id: "8m_mmn", label: "8M", desc: "3ra MMN", icon: "pill", n: 3, type: 'mmn' },
+      { id: "9m_hb_mmn", label: "9M", desc: "4ta MMN (+Hb)", icon: "drop_plus", reqHb: true, n: 4, type: 'mmn' },
+      { id: "10m_mmn", label: "10M", desc: "5ta MMN", icon: "pill", n: 5, type: 'mmn' },
+      { id: "11m_mmn", label: "11M", desc: "6ta MMN", icon: "pill", n: 6, type: 'mmn' },
     ] : [
-      { id: "6m_hb_entrega", label: "6M", desc: "Entr. Hb", icon: "drop_plus", reqHb: true },
-      { id: "7m_entrega", label: "7M", desc: "1ra Entrega", icon: "pill" },
-      { id: "8m_entrega", label: "8M", desc: "2da Entrega", icon: "pill" },
+      { id: "6m_hb_entrega", label: "6M", desc: "Hb + 1ra Entr.", icon: "drop_plus", reqHb: true, n: 1, type: 'sf' },
+      { id: "6m_vita", label: "6M", desc: "Vit. A (Azul)", icon: "vita_azul", n: 1, type: 'vita' },
+      { id: "8m_entrega", label: "8M", desc: "2da Entrega", icon: "pill", n: 2, type: 'sf' },
       { id: "9m_hb", label: "9M", desc: "Dosaje Hb", icon: "drop", reqHb: true },
-      { id: "10m_entrega", label: "10M", desc: "3ra Entrega", icon: "pill" },
-      { id: "11m_entrega", label: "11M", desc: "4ta Entrega", icon: "pill" },
+      { id: "10m_entrega", label: "10M", desc: "3ra Entrega", icon: "pill", n: 3, type: 'sf' },
     ]
   },
   {
@@ -107,27 +117,33 @@ const GENERAR_ESQUEMA_SUPLEMENTOS = (tipo6to11) => [
     color: "indigo",
     hitos: [
       { id: "12m_hb", label: "12M", desc: "Dosaje Hb", icon: "drop", reqHb: true },
-      { id: "15m_hb_entrega", label: "15M", desc: "Hb + 1ra Entr.", icon: "drop_plus", reqHb: true },
-      { id: "16m_entrega", label: "16M", desc: "2da Entrega", icon: "pill" },
-      { id: "17m_entrega", label: "17M", desc: "3ra Entrega", icon: "pill" },
-      { id: "18m_hb_entrega", label: "18M", desc: "Hb + 4ta Entr.", icon: "drop_plus", reqHb: true },
-      { id: "19m_entrega", label: "19M", desc: "5ta Entrega", icon: "pill" },
-      { id: "20m_entrega", label: "20M", desc: "6ta Entrega", icon: "pill" },
+      { id: "12m_vita", label: "12M", desc: "Vit. A (Rojo)", icon: "vita_rojo", n: 1, type: 'vita' },
+      { id: "15m_hb_entrega", label: "15M", desc: "Hb + 1ra Entr.", icon: "drop_plus", reqHb: true, n: 1, type: 'sf' },
+      { id: "16m_entrega", label: "16M", desc: "2da Entrega", icon: "pill", n: 2, type: 'sf' },
+      { id: "17m_entrega", label: "17M", desc: "3ra Entrega", icon: "pill", n: 3, type: 'sf' },
+      { id: "18m_hb_entrega", label: "18M", desc: "Hb + 4ta Entr.", icon: "drop_plus", reqHb: true, n: 4, type: 'sf' },
+      { id: "18m_vita", label: "18M", desc: "Vit. A (Rojo)", icon: "vita_rojo", n: 2, type: 'vita' },
+      { id: "19m_entrega", label: "19M", desc: "5ta Entrega", icon: "pill", n: 5, type: 'sf' },
+      { id: "20m_entrega", label: "20M", desc: "6ta Entrega", icon: "pill", n: 6, type: 'sf' },
       { id: "21m_hb", label: "21M", desc: "Dosaje Hb", icon: "drop", reqHb: true },
     ]
   },
   {
     titulo: "Etapa 2 Años",
-    subtitulo: "Suplementación Continua",
+    subtitulo: "Suplementación y Antiparasitario",
     color: "green",
     hitos: [
-      { id: "2a_hb_entrega", label: "2 AÑOS", desc: "Hb + 1ra", icon: "drop_plus", reqHb: true },
-      { id: "2a1m_entrega", label: "2A 1M", desc: "2da Entrega", icon: "pill" },
-      { id: "2a2m_entrega", label: "2A 2M", desc: "3ra Entrega", icon: "pill" },
-      { id: "2a3m_entrega", label: "2A 3M", desc: "4ta Entrega", icon: "pill" },
-      { id: "2a4m_entrega", label: "2A 4M", desc: "5ta Entrega", icon: "pill" },
-      { id: "2a5m_entrega", label: "2A 5M", desc: "6ta Entrega", icon: "pill" },
+      { id: "2a_hb_entrega", label: "2 AÑOS", desc: "Hb + 1ra", icon: "drop_plus", reqHb: true, n: 1, type: 'sf' },
+      { id: "2a_vita", label: "2 AÑOS", desc: "Vit. A (Rojo)", icon: "vita_rojo", n: 1, type: 'vita' },
+      { id: "2a_apa", label: "2 AÑOS", desc: "Antiparasit.", icon: "apa", n: '1', type: 'apa' },
+      { id: "2a1m_entrega", label: "2A 1M", desc: "2da Entrega", icon: "pill", n: 2, type: 'sf' },
+      { id: "2a2m_entrega", label: "2A 2M", desc: "3ra Entrega", icon: "pill", n: 3, type: 'sf' },
+      { id: "2a3m_entrega", label: "2A 3M", desc: "4ta Entrega", icon: "pill", n: 4, type: 'sf' },
+      { id: "2a4m_entrega", label: "2A 4M", desc: "5ta Entrega", icon: "pill", n: 5, type: 'sf' },
+      { id: "2a5m_entrega", label: "2A 5M", desc: "6ta Entrega", icon: "pill", n: 6, type: 'sf' },
       { id: "2a6m_hb", label: "2A 6M", desc: "Dosaje Hb", icon: "drop", reqHb: true },
+      { id: "2a6m_vita", label: "2A 6M", desc: "Vit. A (Rojo)", icon: "vita_rojo", n: 2, type: 'vita' },
+      { id: "2a6m_apa", label: "2A 6M", desc: "Antiparasit.", icon: "apa", n: '1', type: 'apa' },
     ]
   },
   {
@@ -135,10 +151,14 @@ const GENERAR_ESQUEMA_SUPLEMENTOS = (tipo6to11) => [
     subtitulo: "Ciclo de 3 Entregas",
     color: "orange",
     hitos: [
-      { id: "3a_hb_entrega", label: "3 AÑOS", desc: "Hb + 1ra", icon: "drop_plus", reqHb: true },
-      { id: "3a1m_entrega", label: "3A 1M", desc: "2da Entrega", icon: "pill" },
-      { id: "3a2m_entrega", label: "3A 2M", desc: "3ra Entrega", icon: "pill" },
+      { id: "3a_hb_entrega", label: "3 AÑOS", desc: "Hb + 1ra", icon: "drop_plus", reqHb: true, n: 1, type: 'sf' },
+      { id: "3a_vita", label: "3 AÑOS", desc: "Vit. A (Rojo)", icon: "vita_rojo", n: 1, type: 'vita' },
+      { id: "3a_apa", label: "3 AÑOS", desc: "Antiparasit.", icon: "apa", n: '1', type: 'apa' },
+      { id: "3a1m_entrega", label: "3A 1M", desc: "2da Entrega", icon: "pill", n: 2, type: 'sf' },
+      { id: "3a2m_entrega", label: "3A 2M", desc: "3ra Entrega", icon: "pill", n: 3, type: 'sf' },
       { id: "3a3m_hb_fin", label: "3A 3M", desc: "Hb + Término", icon: "drop_check", reqHb: true },
+      { id: "3a6m_vita", label: "3A 6M", desc: "Vit. A (Rojo)", icon: "vita_rojo", n: 2, type: 'vita' },
+      { id: "3a6m_apa", label: "3A 6M", desc: "Antiparasit.", icon: "apa", n: '1', type: 'apa' },
     ]
   },
   {
@@ -146,10 +166,14 @@ const GENERAR_ESQUEMA_SUPLEMENTOS = (tipo6to11) => [
     subtitulo: "Ciclo Final",
     color: "purple",
     hitos: [
-      { id: "4a_hb_entrega", label: "4 AÑOS", desc: "Hb + 1ra", icon: "drop_plus", reqHb: true },
-      { id: "4a1m_entrega", label: "4A 1M", desc: "2da Entrega", icon: "pill" },
-      { id: "4a2m_entrega", label: "4A 2M", desc: "3ra Entrega", icon: "pill" },
+      { id: "4a_hb_entrega", label: "4 AÑOS", desc: "Hb + 1ra", icon: "drop_plus", reqHb: true, n: 1, type: 'sf' },
+      { id: "4a_vita", label: "4 AÑOS", desc: "Vit. A (Rojo)", icon: "vita_rojo", n: 1, type: 'vita' },
+      { id: "4a_apa", label: "4 AÑOS", desc: "Antiparasit.", icon: "apa", n: '1', type: 'apa' },
+      { id: "4a1m_entrega", label: "4A 1M", desc: "2da Entrega", icon: "pill", n: 2, type: 'sf' },
+      { id: "4a2m_entrega", label: "4A 2M", desc: "3ra Entrega", icon: "pill", n: 3, type: 'sf' },
       { id: "4a3m_hb_fin", label: "4A 3M", desc: "Hb + Término", icon: "drop_check", reqHb: true },
+      { id: "4a6m_vita", label: "4A 6M", desc: "Vit. A (Rojo)", icon: "vita_rojo", n: 2, type: 'vita' },
+      { id: "4a6m_apa", label: "4A 6M", desc: "Antiparasit.", icon: "apa", n: '1', type: 'apa' },
     ]
   }
 ];
@@ -209,7 +233,6 @@ const calculateDetailedAge = (birthDateString) => {
   if (days < 0) { months--; const lastMonth = new Date(today.getFullYear(), today.getMonth(), 0); days += lastMonth.getDate(); }
   if (months < 0) { years--; months += 12; }
   const totalMonths = (years * 12) + months;
-  // MANTENIENDO EL FORMATO EXACTO (AÑOS, MESES Y DÍAS)
   return { years, months, days, totalMonths, formatted: `${years} años, ${months} meses, ${days} días`, shortFormatted: `${years}a ${months}m ${days}d` };
 };
 
@@ -260,9 +283,9 @@ const Toast = ({ message, type, onClose }) => {
   const bgColors = { success: 'bg-green-600', error: 'bg-red-600', info: 'bg-blue-600' };
   return (
     <div className={`fixed top-4 right-4 z-[100] ${bgColors[type]} text-white px-5 py-2.5 rounded-lg shadow-lg flex items-center gap-2 animate-slideDown print:hidden text-sm`}>
-      {type === 'success' && <CheckCircle size={20} />} {type === 'error' && <AlertTriangle size={20} />} {type === 'info' && <Info size={20} />}
+      {type === 'success' && <CheckCircle size={18} />} {type === 'error' && <AlertTriangle size={18} />} {type === 'info' && <Info size={18} />}
       <span className="font-medium">{message}</span>
-      <button onClick={onClose} className="ml-2 hover:bg-white/20 rounded-full p-1"><X size={16}/></button>
+      <button onClick={onClose} className="ml-2 hover:bg-white/20 rounded-full p-1"><X size={14}/></button>
     </div>
   );
 };
@@ -291,6 +314,43 @@ const CustomEdadTooltip = ({ active, payload }) => {
         );
     }
     return null;
+};
+
+// --- COMPONENTE GESTOR DE UBICACIONES ---
+const UbicacionManager = ({ title, listKey, configForm, setConfigForm }) => {
+    const [newItem, setNewItem] = useState('');
+    const list = configForm[listKey] || [];
+    
+    const handleAdd = (e) => {
+        if(e) e.preventDefault();
+        if (newItem.trim() && !list.includes(newItem.trim())) {
+            setConfigForm({ ...configForm, [listKey]: [...list, newItem.trim()] });
+            setNewItem('');
+        }
+    };
+    
+    const handleRemove = (item) => {
+        setConfigForm({ ...configForm, [listKey]: list.filter(i => i !== item) });
+    };
+    
+    return (
+        <div className="border border-slate-200 rounded-xl p-4 bg-slate-50/50 shadow-sm">
+            <h4 className="font-bold text-slate-800 text-sm mb-3">{title}</h4>
+            <div className="flex gap-2 mb-3">
+                <input type="text" className="flex-1 border border-slate-300 p-2 rounded-md text-xs outline-none focus:ring-1 focus:ring-blue-400 bg-white" placeholder="Escribir nuevo..." value={newItem} onChange={e => setNewItem(e.target.value)} onKeyDown={(e) => { if(e.key === 'Enter') handleAdd(e); }} />
+                <button type="button" onClick={handleAdd} className="bg-blue-100 text-blue-700 px-3 py-1.5 rounded-md hover:bg-blue-200 font-bold transition-colors"><Plus size={16}/></button>
+            </div>
+            <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto">
+                {list.map((item, i) => (
+                    <span key={i} className="bg-white border border-slate-200 text-slate-700 px-2 py-1 rounded text-xs font-medium flex items-center gap-1.5 shadow-sm">
+                        {item}
+                        <button type="button" onClick={() => handleRemove(item)} className="text-slate-400 hover:text-red-600 transition-colors"><X size={12}/></button>
+                    </span>
+                ))}
+                {list.length === 0 && <span className="text-xs text-slate-400 italic">No hay registros configurados</span>}
+            </div>
+        </div>
+    );
 };
 
 // --- MÓDULO LOGIN ---
@@ -449,11 +509,13 @@ const Dashboard = ({ children }) => {
        else if (age.totalMonths >= 48 && age.totalMonths < 60) groupKey = '4A';
        else groupKey = '5A+';
 
-       ageGroups[groupKey].count++;
-       ageGroups[groupKey].list.push({
-           nombres: `${c.nombres} ${c.apellidos}`,
-           edadCorta: age.shortFormatted
-       });
+       if (ageGroups[groupKey]) {
+           ageGroups[groupKey].count++;
+           ageGroups[groupKey].list.push({
+               nombres: `${c.nombres} ${c.apellidos}`,
+               edadCorta: age.shortFormatted
+           });
+       }
 
        let groupAnemia = '';
        if (age.totalMonths === 0 && age.days <= 28) groupAnemia = 'RN';
@@ -464,7 +526,7 @@ const Dashboard = ({ children }) => {
        else if (age.totalMonths >= 36 && age.totalMonths < 48) groupAnemia = '3A';
        else if (age.totalMonths >= 48 && age.totalMonths < 60) groupAnemia = '4A';
 
-       if (groupAnemia) {
+       if (groupAnemia && anemiaPorEdad[groupAnemia]) {
            if (c.anemia) anemiaPorEdad[groupAnemia]['Con Anemia']++;
            else anemiaPorEdad[groupAnemia]['Sin Anemia']++;
        }
@@ -563,7 +625,7 @@ const Dashboard = ({ children }) => {
   );
 };
 
-const PadronNominal = ({ children, setChildren, showToast }) => {
+const PadronNominal = ({ children, setChildren, showToast, appConfig }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -573,7 +635,17 @@ const PadronNominal = ({ children, setChildren, showToast }) => {
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const [newChild, setNewChild] = useState({ nombres: '', apellidos: '', dni: '', historiaClinica: '', fechaNacimiento: '', sexo: 'Masculino', seguro: 'SIS', responsable: '', telefono: '', direccion: '', departamento: 'Lima', provincia: 'Lima', distrito: '', localidad: '' });
+  
+  const defaultNewChild = useMemo(() => ({ 
+    nombres: '', apellidos: '', dni: '', historiaClinica: '', fechaNacimiento: '', 
+    sexo: 'Masculino', seguro: 'SIS', responsable: '', telefono: '', direccion: '', 
+    departamento: appConfig?.departamentos?.[0] || '', 
+    provincia: appConfig?.provincias?.[0] || '', 
+    distrito: appConfig?.distritos?.[0] || '', 
+    localidad: appConfig?.localidades?.[0] || '' 
+  }), [appConfig]);
+
+  const [newChild, setNewChild] = useState(defaultNewChild);
   const [currentAgeDisplay, setCurrentAgeDisplay] = useState('');
 
   const handleMouseDown = (e) => { if (e.button !== 0) return; setIsDragging(true); setDragStart({ x: e.clientX - modalPosition.x, y: e.clientY - modalPosition.y }); e.preventDefault(); };
@@ -582,8 +654,9 @@ const PadronNominal = ({ children, setChildren, showToast }) => {
   const confirmDelete = () => { if (childToDelete) { setChildren(prev => prev.filter(c => c.id !== childToDelete.id)); setChildToDelete(null); showToast('Paciente eliminado', 'success'); } };
   const handleEdit = (child) => { setNewChild(child); setIsEditing(true); const ageDetails = calculateDetailedAge(child.fechaNacimiento); setCurrentAgeDisplay(ageDetails ? ageDetails.formatted : ''); setShowForm(true); };
   const handleView = (child) => { setViewChild(child); setModalPosition({ x: 0, y: 0 }); setShowViewModal(true); };
-  const handleNew = () => { setNewChild({ nombres: '', apellidos: '', dni: '', historiaClinica: '', fechaNacimiento: '', sexo: 'Masculino', seguro: 'SIS', responsable: '', telefono: '', direccion: '', departamento: 'Lima', provincia: 'Lima', distrito: '', localidad: '' }); setCurrentAgeDisplay(''); setIsEditing(false); setShowForm(true); };
+  const handleNew = () => { setNewChild(defaultNewChild); setCurrentAgeDisplay(''); setIsEditing(false); setShowForm(true); };
   const handleInputChange = (e) => { const { name, value } = e.target; setNewChild(prev => ({ ...prev, [name]: value })); if (name === 'fechaNacimiento') { const ageDetails = calculateDetailedAge(value); setCurrentAgeDisplay(ageDetails ? ageDetails.formatted : ''); } };
+  
   const handleAdd = (e) => { 
     e.preventDefault(); 
     if (isEditing) { 
@@ -668,10 +741,34 @@ const PadronNominal = ({ children, setChildren, showToast }) => {
                   <div><label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Teléfono</label><div className="relative"><Phone className="absolute left-2.5 top-2.5 text-slate-400" size={16}/><input name="telefono" placeholder="999-999-999" className="w-full pl-9 pr-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.telefono} onChange={handleInputChange} /></div></div>
                   <div className="md:col-span-2"><label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Dirección</label><input name="direccion" placeholder="Av/Jr/Calle" className="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.direccion} onChange={handleInputChange} /></div>
                   <div className="grid grid-cols-2 gap-4 md:col-span-2">
-                      <div><label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Departamento</label><input name="departamento" className="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.departamento} onChange={handleInputChange} /></div>
-                      <div><label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Provincia</label><input name="provincia" className="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.provincia} onChange={handleInputChange} /></div>
-                      <div><label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Distrito</label><input name="distrito" className="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.distrito} onChange={handleInputChange} /></div>
-                      <div><label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Localidad</label><input name="localidad" className="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white" value={newChild.localidad} onChange={handleInputChange} /></div>
+                      <div>
+                        <label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Departamento</label>
+                        <select name="departamento" className="w-full px-2 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white text-slate-700" value={newChild.departamento} onChange={handleInputChange}>
+                            <option value="">Seleccione...</option>
+                            {appConfig?.departamentos?.map((d, i) => <option key={i} value={d}>{d}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Provincia</label>
+                        <select name="provincia" className="w-full px-2 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white text-slate-700" value={newChild.provincia} onChange={handleInputChange}>
+                            <option value="">Seleccione...</option>
+                            {appConfig?.provincias?.map((d, i) => <option key={i} value={d}>{d}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Distrito</label>
+                        <select name="distrito" className="w-full px-2 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white text-slate-700" value={newChild.distrito} onChange={handleInputChange}>
+                            <option value="">Seleccione...</option>
+                            {appConfig?.distritos?.map((d, i) => <option key={i} value={d}>{d}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[11px] text-slate-500 font-bold mb-1 uppercase">Localidad / Sector</label>
+                        <select name="localidad" className="w-full px-2 py-2 text-sm border border-slate-200 rounded-md focus:ring-1 focus:ring-blue-400 outline-none bg-white text-slate-700" value={newChild.localidad} onChange={handleInputChange}>
+                            <option value="">Seleccione...</option>
+                            {appConfig?.localidades?.map((d, i) => <option key={i} value={d}>{d}</option>)}
+                        </select>
+                      </div>
                   </div>
                 </div>
               </div>
@@ -749,7 +846,7 @@ const PadronNominal = ({ children, setChildren, showToast }) => {
   );
 };
 
-const ModuloCRED = ({ children, setChildren, showToast }) => {
+const ModuloCRED = ({ children, setChildren, showToast, currentUser, appConfig }) => {
   const [selectedId, setSelectedId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('crecimiento'); 
@@ -757,6 +854,7 @@ const ModuloCRED = ({ children, setChildren, showToast }) => {
   const [filterCita, setFilterCita] = useState('todos');
   
   const [newCita, setNewCita] = useState('');
+  const [newCitaTipo, setNewCitaTipo] = useState('CRED');
   const [hitoModal, setHitoModal] = useState({ show: false, hito: null, data: { fecha: '', hb: '' } });
   
   const [controlModal, setControlModal] = useState({ show: false, controlId: null, label: '', data: { fecha: new Date().toISOString().split('T')[0], peso: '', talla: '', estadoNutricional: 'Normal' } });
@@ -782,7 +880,7 @@ const ModuloCRED = ({ children, setChildren, showToast }) => {
     const pesoNum = parseFloat(controlModal.data.peso);
     const tallaNum = parseFloat(controlModal.data.talla);
     const status = controlModal.data.estadoNutricional;
-    const newRecord = { fecha: controlModal.data.fecha, peso: pesoNum, talla: tallaNum, estadoNutricional: status };
+    const newRecord = { fecha: controlModal.data.fecha, peso: pesoNum, talla: tallaNum, estadoNutricional: status, atendidoPor: currentUser?.nombre };
     const updatedCronogramaCred = { ...(selectedChild.cronogramaCred || {}), [controlModal.controlId]: newRecord };
     const updatedControlesList = [...(selectedChild.controles || []), { date: controlModal.data.fecha, weight: pesoNum, height: tallaNum, status }];
     updateChildData({ cronogramaCred: updatedCronogramaCred, estadoNutricional: status, controles: updatedControlesList });
@@ -798,7 +896,7 @@ const ModuloCRED = ({ children, setChildren, showToast }) => {
 
   const handleUpdateCita = () => {
       if(!newCita) return;
-      updateChildData({ proximaCita: newCita });
+      updateChildData({ proximaCita: newCita, proximaCitaTipo: newCitaTipo });
       showToast('Cita agendada', 'success'); 
   };
 
@@ -809,18 +907,36 @@ const ModuloCRED = ({ children, setChildren, showToast }) => {
 
   const saveHito = () => {
     const { hito, data } = hitoModal;
-    const updatedCronograma = { ...(selectedChild.cronogramaSuplementos || {}), [hito.id]: { ...data, estado: 'completado' } };
+    const updatedCronograma = { 
+        ...(selectedChild.cronogramaSuplementos || {}), 
+        [hito.id]: { 
+            ...data, 
+            estado: 'completado', 
+            atendidoPor: currentUser?.nombre,
+            n: hito.n, 
+            type: hito.type || '' 
+        } 
+    };
     updateChildData({ cronogramaSuplementos: updatedCronograma });
     setHitoModal({ show: false, hito: null, data: {} });
     showToast('Guardado', 'success');
   };
 
   const renderIcon = (type, done) => {
-    const colorClass = done ? "text-white" : (type.includes("drop") ? "text-red-500" : "text-orange-500");
+    let colorClass = "text-orange-500";
+    if (type.includes("drop") || type === "vita_rojo") colorClass = "text-red-500";
+    else if (type === "vita_azul") colorClass = "text-blue-500";
+    else if (type === "apa") colorClass = "text-emerald-500";
+    
+    if (done) colorClass = "text-green-600";
+
     if (type === "drop") return <Droplet size={18} className={colorClass} fill={done ? "currentColor" : "none"} />;
     if (type === "drop_plus") return <div className="relative"><Droplet size={18} className={colorClass} /><Plus size={10} className={`absolute -right-1 -top-1 ${colorClass}`} strokeWidth={3} /></div>;
     if (type === "drop_check") return <div className="relative"><Droplet size={18} className={colorClass} /><Check size={10} className={`absolute -right-1 -top-1 ${colorClass}`} strokeWidth={3} /></div>;
-    if (type === "pill") return <Circle size={18} className={colorClass} />;
+    if (type.startsWith("vita")) return <Star size={18} className={colorClass} fill={done ? "currentColor" : "none"} />;
+    if (type === "apa") return <Bug size={18} className={colorClass} />;
+    if (type === "pill") return <Circle size={18} className={colorClass} fill={done ? "currentColor" : "none"} />;
+    
     return <Circle size={18} className={colorClass} />;
   };
 
@@ -856,7 +972,11 @@ const ModuloCRED = ({ children, setChildren, showToast }) => {
                             </div>
                           </div>
                        </div>
-                       <div className={`px-4 py-2 rounded-lg border ${child.citaStatus.bg} ${child.citaStatus.border} flex flex-col items-center min-w-[120px] shrink-0`}><span className={`text-[11px] font-bold uppercase ${child.citaStatus.color}`}>{child.citaStatus.status === 'sin_cita' ? 'Cita CRED' : child.citaStatus.label}</span><span className={`text-sm font-medium ${child.citaStatus.color}`}>{child.citaStatus.status === 'sin_cita' ? 'No programada' : formatDateLong(child.proximaCita)}</span></div>
+                       <div className={`px-4 py-2 rounded-lg border ${child.citaStatus.bg} ${child.citaStatus.border} flex flex-col items-center min-w-[120px] shrink-0`}>
+                          <span className={`text-[11px] font-bold uppercase ${child.citaStatus.color}`}>{child.citaStatus.status === 'sin_cita' ? 'Sin Cita' : child.citaStatus.label}</span>
+                          {child.proximaCita && <span className={`text-[9px] font-bold uppercase ${child.citaStatus.color} opacity-70`}>{child.proximaCitaTipo || 'CRED'}</span>}
+                          <span className={`text-sm font-medium ${child.citaStatus.color}`}>{child.citaStatus.status === 'sin_cita' ? 'No programada' : formatDateLong(child.proximaCita)}</span>
+                       </div>
                        <button onClick={() => setSelectedId(child.id)} className="bg-purple-600 text-white px-5 py-2.5 rounded-lg hover:bg-purple-700 text-sm font-medium flex items-center gap-1.5 shrink-0 shadow-sm">Atender <ChevronRight size={18}/></button>
                     </div>
                   )) : <div className="text-center p-10 text-sm text-slate-500 bg-white border border-slate-100 rounded-lg">No se encontraron pacientes.</div>}
@@ -951,7 +1071,7 @@ const ModuloCRED = ({ children, setChildren, showToast }) => {
                       {activeTab === 'suplementos' && (
                         <div className="space-y-6 animate-fadeIn">
                             <div className="flex items-center gap-2 mb-3">
-                                <h2 className="text-xl font-bold text-purple-800 flex items-center gap-1.5"><Circle size={20}/> Suplementos</h2>
+                                <h2 className="text-xl font-bold text-purple-800 flex items-center gap-1.5"><Circle size={20}/> Suplementos y Antiparasitario</h2>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 {esquema.map((etapa, idx) => (
@@ -960,15 +1080,15 @@ const ModuloCRED = ({ children, setChildren, showToast }) => {
                                             <div><h3 className={`font-bold text-${etapa.color}-800 text-base`}>{etapa.titulo}</h3><p className={`text-${etapa.color}-600 text-[11px] font-bold uppercase tracking-wider`}>{etapa.subtitulo}</p></div>
                                             {etapa.hasToggle && (<div className="flex bg-white rounded flex-shrink-0 border border-slate-200"><button onClick={() => setSupplementType6to11('Hierro')} className={`px-3 py-1.5 text-[11px] font-bold rounded-l ${supplementType6to11 === 'Hierro' ? 'bg-blue-600 text-white' : 'text-slate-500 hover:bg-slate-50'}`}>Hierro</button><button onClick={() => setSupplementType6to11('MMN')} className={`px-3 py-1.5 text-[11px] font-bold rounded-r ${supplementType6to11 === 'MMN' ? 'bg-purple-600 text-white' : 'text-slate-500 hover:bg-slate-50'}`}>MMN</button></div>)}
                                         </div>
-                                        <div className="p-4 grid grid-cols-2 gap-4">
+                                        <div className="p-4 grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
                                             {etapa.hitos.map((hito) => {
                                                 const record = selectedChild.cronogramaSuplementos?.[hito.id];
                                                 const isDone = !!record;
                                                 return (
-                                                    <button key={hito.id} onClick={() => handleHitoClick(hito)} className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all ${isDone ? `bg-green-50 border-green-400` : 'bg-white border-slate-200 hover:border-slate-300 shadow-sm'}`}>
+                                                    <button key={hito.id} onClick={() => handleHitoClick(hito)} className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all ${isDone ? `bg-green-50 border-green-500 shadow-sm` : 'bg-white border-slate-200 hover:border-slate-300 shadow-sm'}`}>
                                                         <div className="text-sm font-bold text-slate-700 mb-1.5">{hito.label}</div>
                                                         <div className={`mb-1.5 ${isDone ? 'scale-110 transition-transform' : ''}`}>{renderIcon(hito.icon, isDone)}</div>
-                                                        <div className="text-[11px] text-slate-500 text-center leading-tight mb-1.5">{hito.desc}</div>
+                                                        <div className="text-[10px] text-slate-500 text-center leading-tight mb-1.5 min-h-[26px] flex items-center">{hito.desc}</div>
                                                         {isDone && (<div className="mt-1 flex flex-col items-center"><div className="flex items-center text-[11px] text-green-700 font-bold"><CheckCircle size={12} className="mr-1"/> {formatDateLong(record.fecha)}</div>{record.hb && <div className="text-[11px] text-blue-700 font-bold mt-1 bg-blue-100 px-2 py-0.5 rounded">Hb: {record.hb}</div>}</div>)}
                                                     </button>
                                                 );
@@ -980,7 +1100,24 @@ const ModuloCRED = ({ children, setChildren, showToast }) => {
                         </div>
                       )}
                       
-                      {activeTab === 'citas' && (<div className="space-y-4 animate-fadeIn"><h2 className="text-xl font-bold text-purple-800">Agendar Cita (CRED)</h2><div className="flex gap-3 max-w-sm"><input type="date" className="border border-slate-200 p-2 rounded-lg w-full text-sm outline-none focus:ring-1 focus:ring-purple-400" value={newCita} onChange={(e) => setNewCita(e.target.value)} /><button onClick={handleUpdateCita} className="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium shadow-sm hover:bg-blue-700">Agendar</button></div></div>)}
+                      {activeTab === 'citas' && (
+                        <div className="space-y-4 animate-fadeIn">
+                            <h2 className="text-xl font-bold text-purple-800">Agendar Próxima Cita</h2>
+                            <div className="flex flex-col sm:flex-row gap-3 max-w-lg">
+                                <select 
+                                    className="border border-slate-200 p-2 rounded-lg text-sm outline-none focus:ring-1 focus:ring-purple-400 font-medium text-slate-700"
+                                    value={newCitaTipo}
+                                    onChange={(e) => setNewCitaTipo(e.target.value)}
+                                >
+                                    <option value="CRED">Control CRED</option>
+                                    <option value="Vacunas">Vacunas</option>
+                                    <option value="Suplementación">Suplementación</option>
+                                </select>
+                                <input type="date" className="border border-slate-200 p-2 rounded-lg text-sm w-full outline-none focus:ring-1 focus:ring-purple-400" value={newCita} onChange={(e) => setNewCita(e.target.value)} />
+                                <button onClick={handleUpdateCita} className="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium shadow-sm hover:bg-blue-700 whitespace-nowrap">Agendar</button>
+                            </div>
+                        </div>
+                      )}
                   </div>
               </div>
           </div>
@@ -1038,7 +1175,7 @@ const ModuloCRED = ({ children, setChildren, showToast }) => {
   );
 };
 
-const ModuloAnemia = ({ children, setChildren, showToast }) => {
+const ModuloAnemia = ({ children, setChildren, showToast, currentUser }) => {
   const [selectedId, setSelectedId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   
@@ -1047,6 +1184,7 @@ const ModuloAnemia = ({ children, setChildren, showToast }) => {
   
   const [activeTab, setActiveTab] = useState('tratamiento'); 
   const [newCita, setNewCita] = useState('');
+  const [newCitaTipo, setNewCitaTipo] = useState('Control');
   const [hbControl, setHbControl] = useState({ fecha: new Date().toISOString().split('T')[0], hb: '', tipo: 'Control', resultado: 'Normal', observacion: '' });
   
   const [entregaModal, setEntregaModal] = useState({ show: false, index: null, fecha: '', peso: '', talla: '' });
@@ -1096,7 +1234,8 @@ const ModuloAnemia = ({ children, setChildren, showToast }) => {
     const { index, fecha, peso, talla } = entregaModal;
     if (!fecha) return;
     const currentEntregas = [...(selectedChild.tratamientoAnemia?.entregas || [])];
-    currentEntregas[index] = { fecha, peso, talla };
+    // INYECTAMOS EL USUARIO ACTUAL
+    currentEntregas[index] = { fecha, peso, talla, atendidoPor: currentUser?.nombre };
     updateChildData({ tratamientoAnemia: { ...selectedChild.tratamientoAnemia, entregas: currentEntregas } });
     showToast(`Entrega registrada`, 'success');
     setEntregaModal({ show: false, index: null, fecha: '', peso: '', talla: '' });
@@ -1124,7 +1263,6 @@ const ModuloAnemia = ({ children, setChildren, showToast }) => {
       setDeleteHbModal({ show: false, index: null });
   };
 
-  // --- CORRECCIÓN DE EXPERIENCIA: CÁLCULO AUTOMÁTICO DE DIAGNÓSTICO Y REDIRECCIÓN ---
   const handleHbChange = (e) => {
       const newHb = e.target.value;
       setHbControl(prev => {
@@ -1158,13 +1296,14 @@ const ModuloAnemia = ({ children, setChildren, showToast }) => {
           cancelEditHb();
           return;
       }
-      const nuevoRegistro = { ...hbControl, hb: val };
+      // INYECTAMOS EL USUARIO ACTUAL
+      const nuevoRegistro = { ...hbControl, hb: val, atendidoPor: currentUser?.nombre };
       const nuevoHistorial = [...(selectedChild.historialAnemia || []), nuevoRegistro];
       let updates = { hemoglobina: val, historialAnemia: nuevoHistorial };
       if (!selectedChild.anemia && isAnemia) {
           updates.anemia = true; updates.tipoAnemia = manualTipo; updates.tratamientoAnemia = { inicio: hbControl.fecha, entregas: [] };
           showToast(`Anemia detectada. Tratamiento iniciado.`, 'error');
-          setActiveTab('tratamiento'); // SALTO AUTOMÁTICO AL TRATAMIENTO
+          setActiveTab('tratamiento'); 
       } else if (!isAnemia && selectedChild.anemia) {
           showToast(`Hb Normal. Considere dar de alta.`, 'success');
       } else { showToast(`Guardado`, 'info'); }
@@ -1174,7 +1313,7 @@ const ModuloAnemia = ({ children, setChildren, showToast }) => {
 
   const handleUpdateCita = () => {
       if(!newCita) return;
-      updateChildData({ proximaCitaAnemia: newCita });
+      updateChildData({ proximaCitaAnemia: newCita, proximaCitaAnemiaTipo: newCitaTipo });
       showToast('Cita agendada', 'success');
   };
 
@@ -1230,6 +1369,7 @@ const ModuloAnemia = ({ children, setChildren, showToast }) => {
                    
                    <div className={`px-4 py-2 rounded-lg border ${child.citaStatus.bg} ${child.citaStatus.border} flex flex-col items-center min-w-[120px] w-full sm:w-auto shrink-0`}>
                       <span className={`text-[11px] font-bold uppercase ${child.citaStatus.color}`}>{child.citaStatus.status === 'sin_cita' ? 'Cita Anemia' : child.citaStatus.label}</span>
+                      {child.proximaCitaAnemia && <span className={`text-[9px] font-bold uppercase ${child.citaStatus.color} opacity-70`}>{child.proximaCitaAnemiaTipo || 'Control'}</span>}
                       <span className={`text-sm font-medium ${child.citaStatus.color}`}>{child.citaStatus.status === 'sin_cita' ? 'No programada' : formatDateLong(child.proximaCitaAnemia)}</span>
                    </div>
 
@@ -1436,7 +1576,23 @@ const ModuloAnemia = ({ children, setChildren, showToast }) => {
              </div>
           )}
 
-          {activeTab === 'citas' && (<div className="space-y-5 animate-fadeIn"><h2 className="text-base font-bold text-purple-800">Agendar Cita</h2><div className="flex gap-2 max-w-md"><input type="date" className="border border-slate-200 p-2 rounded-lg text-sm w-full outline-none focus:ring-1 focus:ring-purple-400" value={newCita} onChange={(e) => setNewCita(e.target.value)} /><button onClick={handleUpdateCita} className="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 shadow-sm">Agendar</button></div></div>)}
+          {activeTab === 'citas' && (
+              <div className="space-y-4 animate-fadeIn">
+                  <h2 className="text-xl font-bold text-red-800">Agendar Próxima Cita</h2>
+                  <div className="flex flex-col sm:flex-row gap-3 max-w-lg">
+                      <select 
+                          className="border border-slate-200 p-2 rounded-lg text-sm outline-none focus:ring-1 focus:ring-red-400 font-medium text-slate-700"
+                          value={newCitaTipo}
+                          onChange={(e) => setNewCitaTipo(e.target.value)}
+                      >
+                          <option value="Control">Control</option>
+                          <option value="Alta">Alta</option>
+                      </select>
+                      <input type="date" className="border border-slate-200 p-2 rounded-lg text-sm w-full outline-none focus:ring-1 focus:ring-red-400" value={newCita} onChange={(e) => setNewCita(e.target.value)} />
+                      <button onClick={handleUpdateCita} className="bg-red-600 text-white px-5 py-2 rounded-lg text-sm font-medium shadow-sm hover:bg-red-700 whitespace-nowrap">Agendar</button>
+                  </div>
+              </div>
+          )}
           </div>
         </div>
       )}
@@ -1527,6 +1683,14 @@ const Reportes = ({ children, showToast, appConfig }) => {
 
   const safeConfig = appConfig || { nombreCentro: 'Centro de Salud' };
 
+  // Diccionario universal de hitos para los reportes
+  const allHitosMap = useMemo(() => {
+    const map = {};
+    GENERAR_ESQUEMA_SUPLEMENTOS('Hierro').forEach(etapa => etapa.hitos.forEach(h => map[h.id] = h));
+    GENERAR_ESQUEMA_SUPLEMENTOS('MMN').forEach(etapa => etapa.hitos.forEach(h => map[h.id] = h));
+    return map;
+  }, []);
+
   const reportData = useMemo(() => {
     let rows = [];
 
@@ -1544,7 +1708,8 @@ const Reportes = ({ children, showToast, appConfig }) => {
                 datesMap[d] = { 
                     peso: '', talla: '', nCred: '', 
                     vacunas: [], hb: '', diagnostico: '', entregaNum: '', alta: '',
-                    sf: '', mmn: '', vitA: '',
+                    sf: '', mmn: '', vitA: '', apa: '',
+                    atendidoPor: '',
                     isAnemiaActivity: false, isCredActivity: false
                 };
             }
@@ -1559,6 +1724,7 @@ const Reportes = ({ children, showToast, appConfig }) => {
                     datesMap[val.fecha].talla = val.talla;
                     const lbl = ESQUEMA_CONTROLES_CRED.flatMap(g => g.controles).find(c => c.id === key)?.label || key;
                     datesMap[val.fecha].nCred = lbl;
+                    if (val.atendidoPor) datesMap[val.fecha].atendidoPor = val.atendidoPor;
                     datesMap[val.fecha].isCredActivity = true;
                 }
             });
@@ -1581,8 +1747,15 @@ const Reportes = ({ children, showToast, appConfig }) => {
                 if (isDateInPeriod(val.fecha)) {
                     addDate(val.fecha);
                     if (val.hb) datesMap[val.fecha].hb = val.hb;
-                    if (key.toLowerCase().includes('mmn')) datesMap[val.fecha].mmn = 'X';
-                    else if (key.toLowerCase().includes('entrega')) datesMap[val.fecha].sf = 'X';
+                    
+                    let displayVal = val.n ? String(val.n) : '✓';
+                    
+                    if (val.type === 'mmn' || key.toLowerCase().includes('mmn')) datesMap[val.fecha].mmn = displayVal;
+                    else if (val.type === 'vita' || key.toLowerCase().includes('vita')) datesMap[val.fecha].vitA = displayVal;
+                    else if (val.type === 'apa' || key.toLowerCase().includes('apa')) datesMap[val.fecha].apa = displayVal;
+                    else if (val.type === 'sf' || key.toLowerCase().includes('entrega')) datesMap[val.fecha].sf = displayVal;
+                    
+                    if (val.atendidoPor) datesMap[val.fecha].atendidoPor = val.atendidoPor;
                     datesMap[val.fecha].isCredActivity = true;
                 }
             });
@@ -1596,6 +1769,7 @@ const Reportes = ({ children, showToast, appConfig }) => {
                     datesMap[val.fecha].hb = val.hb;
                     if (val.resultado) datesMap[val.fecha].diagnostico = val.resultado;
                     if (val.tipo === 'Alta') datesMap[val.fecha].alta = 'Sí';
+                    if (val.atendidoPor) datesMap[val.fecha].atendidoPor = val.atendidoPor;
                     datesMap[val.fecha].isAnemiaActivity = true;
                 }
             });
@@ -1611,6 +1785,7 @@ const Reportes = ({ children, showToast, appConfig }) => {
                     if (typeof entrega === 'object') {
                         if (!datesMap[fecha].peso && entrega.peso) datesMap[fecha].peso = entrega.peso;
                         if (!datesMap[fecha].talla && entrega.talla) datesMap[fecha].talla = entrega.talla;
+                        if (entrega.atendidoPor) datesMap[fecha].atendidoPor = entrega.atendidoPor;
                     }
                     datesMap[fecha].isAnemiaActivity = true;
                 }
@@ -1634,6 +1809,7 @@ const Reportes = ({ children, showToast, appConfig }) => {
                          if (typeof entrega === 'object') {
                             if (!datesMap[fecha].peso && entrega.peso) datesMap[fecha].peso = entrega.peso;
                             if (!datesMap[fecha].talla && entrega.talla) datesMap[fecha].talla = entrega.talla;
+                            if (entrega.atendidoPor) datesMap[fecha].atendidoPor = entrega.atendidoPor;
                          }
                          datesMap[fecha].isAnemiaActivity = true;
                       }
@@ -1745,6 +1921,7 @@ const Reportes = ({ children, showToast, appConfig }) => {
                   <th>Diagnóstico</th>
                   <th>Entrega N°</th>
                   <th>Alta</th>
+                  <th>Atendido Por</th>
                   <th>Ubicación</th>
               </tr>
           `;
@@ -1763,13 +1940,15 @@ const Reportes = ({ children, showToast, appConfig }) => {
                   <th rowspan="2">Hb</th>
                   <th rowspan="2">N° CRED</th>
                   <th rowspan="2">Inmunizaciones</th>
-                  <th colspan="3">Suplementación</th>
+                  <th colspan="4">Suplementación</th>
+                  <th rowspan="2">Atendido Por</th>
                   <th rowspan="2">Ubicación</th>
               </tr>
               <tr>
                   <th>SF</th>
                   <th>MMN</th>
                   <th>Vit. A</th>
+                  <th>Antiparasit.</th>
               </tr>
           `;
       }
@@ -1795,6 +1974,7 @@ const Reportes = ({ children, showToast, appConfig }) => {
                       <td style="text-align: center; font-weight: bold;">${ev.data.diagnostico || '-'}</td>
                       <td style="text-align: center; font-weight: bold;">${ev.data.entregaNum || '-'}</td>
                       <td style="text-align: center; font-weight: bold; color: #166534;">${ev.data.alta || '-'}</td>
+                      <td style="text-align: center;">${ev.data.atendidoPor || '-'}</td>
                       <td>${ev.child.localidad || ev.child.direccion || '-'}</td>
                   </tr>
               `;
@@ -1815,7 +1995,9 @@ const Reportes = ({ children, showToast, appConfig }) => {
                       <td>${ev.data.vacunas.join(', ') || '-'}</td>
                       <td style="text-align: center; font-weight: bold;">${ev.data.sf || '-'}</td>
                       <td style="text-align: center; font-weight: bold;">${ev.data.mmn || '-'}</td>
-                      <td style="text-align: center; font-weight: bold;">${ev.data.vitA || '-'}</td>
+                      <td style="text-align: center; font-weight: bold; color: #b30000;">${ev.data.vitA || '-'}</td>
+                      <td style="text-align: center; font-weight: bold; color: #059669;">${ev.data.apa || '-'}</td>
+                      <td style="text-align: center;">${ev.data.atendidoPor || '-'}</td>
                       <td>${ev.child.localidad || ev.child.direccion || '-'}</td>
                   </tr>
               `;
@@ -1903,6 +2085,7 @@ const Reportes = ({ children, showToast, appConfig }) => {
                                 <th className="border border-slate-300 p-1.5">Diagnóstico</th>
                                 <th className="border border-slate-300 p-1.5 w-14">Entrega N°</th>
                                 <th className="border border-slate-300 p-1.5 w-12">Alta</th>
+                                <th className="border border-slate-300 p-1.5 w-24">Atendido Por</th>
                                 <th className="border border-slate-300 p-1.5">Ubicación</th>
                             </tr>
                         </thead>
@@ -1922,6 +2105,7 @@ const Reportes = ({ children, showToast, appConfig }) => {
                                     <td className="border border-slate-300 p-1.5 text-center font-bold">{row.data.diagnostico || '-'}</td>
                                     <td className="border border-slate-300 p-1.5 text-center font-bold">{row.data.entregaNum || '-'}</td>
                                     <td className="border border-slate-300 p-1.5 text-center font-bold text-green-700">{row.data.alta || '-'}</td>
+                                    <td className="border border-slate-300 p-1.5 text-center text-[9px] truncate max-w-[100px]" title={row.data.atendidoPor}>{row.data.atendidoPor || '-'}</td>
                                     <td className="border border-slate-300 p-1.5 text-center text-[9px] truncate max-w-[100px]">{row.child.localidad || row.child.direccion || '-'}</td>
                                 </tr>
                             ))}
@@ -1943,13 +2127,15 @@ const Reportes = ({ children, showToast, appConfig }) => {
                                 <th rowSpan="2" className="border border-slate-300 p-1.5 w-10">Hb</th>
                                 <th rowSpan="2" className="border border-slate-300 p-1.5">N° CRED</th>
                                 <th rowSpan="2" className="border border-slate-300 p-1.5 max-w-[120px]">Inmunizaciones</th>
-                                <th colSpan="3" className="border border-slate-300 p-1 border-b-0">Suplementación</th>
+                                <th colSpan="4" className="border border-slate-300 p-1 border-b-0">Suplementación</th>
+                                <th rowSpan="2" className="border border-slate-300 p-1.5 w-24">Atendido Por</th>
                                 <th rowSpan="2" className="border border-slate-300 p-1.5">Ubicación</th>
                             </tr>
                             <tr className="bg-[#1a3686] text-white">
                                 <th className="border border-slate-300 p-1 w-8">SF</th>
                                 <th className="border border-slate-300 p-1 w-8">MMN</th>
                                 <th className="border border-slate-300 p-1 w-10">Vit. A</th>
+                                <th className="border border-slate-300 p-1 w-10">Antiparasit.</th>
                             </tr>
                         </thead>
                         <tbody className="text-slate-800">
@@ -1969,7 +2155,9 @@ const Reportes = ({ children, showToast, appConfig }) => {
                                     <td className="border border-slate-300 p-1.5 text-center text-[9px] max-w-[120px] truncate" title={row.data.vacunas.join(', ')}>{row.data.vacunas.join(', ') || '-'}</td>
                                     <td className="border border-slate-300 p-1.5 text-center font-bold">{row.data.sf || '-'}</td>
                                     <td className="border border-slate-300 p-1.5 text-center font-bold">{row.data.mmn || '-'}</td>
-                                    <td className="border border-slate-300 p-1.5 text-center font-bold">{row.data.vitA || '-'}</td>
+                                    <td className="border border-slate-300 p-1.5 text-center font-bold text-red-600">{row.data.vitA || '-'}</td>
+                                    <td className="border border-slate-300 p-1.5 text-center font-bold text-emerald-600">{row.data.apa || '-'}</td>
+                                    <td className="border border-slate-300 p-1.5 text-center text-[9px] truncate max-w-[100px]" title={row.data.atendidoPor}>{row.data.atendidoPor || '-'}</td>
                                     <td className="border border-slate-300 p-1.5 text-center text-[9px] truncate max-w-[100px]">{row.child.localidad || row.child.direccion || '-'}</td>
                                 </tr>
                             ))}
@@ -2111,6 +2299,7 @@ const Configuracion = ({ users, setUsers, appConfig, setAppConfig, children, set
 
         <div className="flex border-b border-slate-200 mb-5 overflow-x-auto text-xs font-bold">
             <button onClick={() => setActiveTab('general')} className={`px-4 py-2 border-b-2 whitespace-nowrap transition-colors ${activeTab === 'general' ? 'border-blue-600 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-700'}`}>General</button>
+            <button onClick={() => setActiveTab('ubicaciones')} className={`flex items-center gap-1 px-4 py-2 border-b-2 whitespace-nowrap transition-colors ${activeTab === 'ubicaciones' ? 'border-blue-600 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-700'}`}><MapPin size={14}/> Ubicaciones</button>
             <button onClick={() => setActiveTab('usuarios')} className={`px-4 py-2 border-b-2 whitespace-nowrap transition-colors ${activeTab === 'usuarios' ? 'border-blue-600 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-700'}`}>Usuarios</button>
             <button onClick={() => setActiveTab('datos')} className={`flex items-center gap-1 px-4 py-2 border-b-2 whitespace-nowrap transition-colors ${activeTab === 'datos' ? 'border-red-600 text-red-700' : 'border-transparent text-slate-500 hover:text-slate-700'}`}><AlertTriangle size={14}/> Base de Datos</button>
         </div>
@@ -2148,6 +2337,24 @@ const Configuracion = ({ users, setUsers, appConfig, setAppConfig, children, set
 
                 <div className="mt-6 flex justify-end border-t border-slate-100 pt-4">
                     <button onClick={handleSaveConfig} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-md flex items-center gap-1.5 transition-colors shadow-sm text-sm"><Save size={16}/> Guardar</button>
+                </div>
+            </div>
+        )}
+
+        {activeTab === 'ubicaciones' && (
+            <div className="space-y-5 animate-fadeIn w-full pb-2">
+                <div className="bg-blue-50 border border-blue-100 p-3 rounded-lg flex items-start gap-2 max-w-2xl text-xs">
+                    <Info className="text-blue-600 shrink-0" size={16}/>
+                    <div><h4 className="font-bold text-blue-800">Gestión de Ubicaciones</h4><p className="text-blue-600">Configura las opciones que aparecerán como listas desplegables al registrar o editar un paciente.</p></div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                    <UbicacionManager title="Departamentos" listKey="departamentos" configForm={configForm} setConfigForm={setConfigForm} />
+                    <UbicacionManager title="Provincias" listKey="provincias" configForm={configForm} setConfigForm={setConfigForm} />
+                    <UbicacionManager title="Distritos" listKey="distritos" configForm={configForm} setConfigForm={setConfigForm} />
+                    <UbicacionManager title="Localidades / Sectores" listKey="localidades" configForm={configForm} setConfigForm={setConfigForm} />
+                </div>
+                <div className="mt-6 flex justify-end border-t border-slate-100 pt-4">
+                    <button onClick={handleSaveConfig} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-md flex items-center gap-1.5 transition-colors shadow-sm text-sm"><Save size={16}/> Guardar Cambios</button>
                 </div>
             </div>
         )}
@@ -2302,6 +2509,8 @@ const App = () => {
   const [isOnline, setIsOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
   const [notification, setNotification] = useState(null); 
   const [authChecking, setAuthChecking] = useState(true);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const notifRef = useRef(null);
 
   // Estados Base
   const [children, _setChildren] = useState(() => {
@@ -2333,10 +2542,9 @@ const App = () => {
   const configRef = useRef(appConfig);
   useEffect(() => { configRef.current = appConfig; }, [appConfig]);
 
-
   const showToast = (message, type = 'success') => { setNotification({ message, type }); };
 
-  // --- LÓGICA DE SINCRONIZACIÓN FIREBASE CORREGIDA ---
+  // --- LÓGICA DE SINCRONIZACIÓN FIREBASE ---
   useEffect(() => {
     let unsubChildren = () => {};
     let unsubUsers = () => {};
@@ -2386,6 +2594,57 @@ const App = () => {
 
     return () => { unsubChildren(); unsubUsers(); unsubConfig(); };
   }, []);
+
+  // Clic fuera del panel de notificaciones
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setShowNotifications(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Calcular Notificaciones Inteligentes
+  const notificacionesActivas = useMemo(() => {
+      const notifs = [];
+      const today = new Date();
+      today.setHours(0,0,0,0);
+
+      children.forEach(child => {
+          // CRED
+          if (child.proximaCita) {
+              const citaDate = new Date(child.proximaCita + 'T00:00:00');
+              const diffTime = citaDate - today;
+              const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+              if (diffDays < 0) {
+                  notifs.push({ id: `cred-${child.id}`, childName: `${child.nombres} ${child.apellidos}`, dni: child.dni, type: 'CRED', subType: child.proximaCitaTipo || 'CRED', status: 'vencido', days: Math.abs(diffDays) });
+              } else if (diffDays === 0) {
+                  notifs.push({ id: `cred-${child.id}`, childName: `${child.nombres} ${child.apellidos}`, dni: child.dni, type: 'CRED', subType: child.proximaCitaTipo || 'CRED', status: 'hoy', days: 0 });
+              }
+          }
+          // ANEMIA
+          if (child.proximaCitaAnemia) {
+              const citaDate = new Date(child.proximaCitaAnemia + 'T00:00:00');
+              const diffTime = citaDate - today;
+              const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+              if (diffDays < 0) {
+                  notifs.push({ id: `anemia-${child.id}`, childName: `${child.nombres} ${child.apellidos}`, dni: child.dni, type: 'Anemia', subType: child.proximaCitaAnemiaTipo || 'Control', status: 'vencido', days: Math.abs(diffDays) });
+              } else if (diffDays === 0) {
+                  notifs.push({ id: `anemia-${child.id}`, childName: `${child.nombres} ${child.apellidos}`, dni: child.dni, type: 'Anemia', subType: child.proximaCitaAnemiaTipo || 'Control', status: 'hoy', days: 0 });
+              }
+          }
+      });
+
+      return notifs.sort((a, b) => {
+          if (a.status === 'vencido' && b.status === 'hoy') return -1;
+          if (a.status === 'hoy' && b.status === 'vencido') return 1;
+          if (a.status === 'vencido' && b.status === 'vencido') return b.days - a.days;
+          return 0;
+      });
+  }, [children]);
+
 
   // --- WRAPPERS PARA GUARDAR EN FIREBASE ---
   const setChildrenSync = (newVal) => {
@@ -2576,10 +2835,66 @@ const App = () => {
                 </div>
             </div>
             
-            <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border transition-colors shadow-sm ${isOnline ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200'}`}>
-                <div className={`w-1.5 h-1.5 rounded-full ${isOnline ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
-                <span className="hidden sm:inline">{isOnline ? 'Sistema en línea' : 'Sin conexión'}</span>
-                <span className="sm:hidden">{isOnline ? 'Online' : 'Offline'}</span>
+            <div className="flex items-center gap-4">
+                {/* CAMPANA DE NOTIFICACIONES */}
+                <div className="relative" ref={notifRef}>
+                   <button onClick={() => setShowNotifications(!showNotifications)} className="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors relative">
+                      <Bell size={20} />
+                      {notificacionesActivas.length > 0 && (
+                         <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-white">
+                            {notificacionesActivas.length > 99 ? '99+' : notificacionesActivas.length}
+                         </span>
+                      )}
+                   </button>
+
+                   {showNotifications && (
+                      <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-slate-200 z-50 overflow-hidden animate-slideDown origin-top-right">
+                         <div className="p-3 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+                            <h3 className="font-bold text-slate-800 text-sm flex items-center gap-1.5"><Bell size={16} className="text-blue-600"/> Alertas</h3>
+                            <span className="text-xs bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full font-bold">{notificacionesActivas.length}</span>
+                         </div>
+                         <div className="max-h-80 overflow-y-auto">
+                            {notificacionesActivas.length === 0 ? (
+                               <div className="p-6 text-center text-slate-500 text-sm flex flex-col items-center">
+                                  <CheckCircle size={36} className="text-green-400 mb-2"/>
+                                  <span>¡Todo al día! No hay citas pendientes para hoy ni vencidas.</span>
+                               </div>
+                            ) : (
+                               <div className="divide-y divide-slate-100">
+                                  {notificacionesActivas.map(n => (
+                                     <div key={n.id} onClick={() => { setActiveModule(n.type === 'Anemia' ? 'anemia' : 'cred'); setShowNotifications(false); }} className="p-3 hover:bg-slate-50 flex gap-3 items-start transition-colors cursor-pointer group">
+                                        <div className={`mt-0.5 p-2 rounded-full ${n.type === 'Anemia' ? 'bg-red-100 text-red-600 group-hover:bg-red-200' : 'bg-purple-100 text-purple-600 group-hover:bg-purple-200'}`}>
+                                           {n.type === 'Anemia' ? <Droplet size={14}/> : <Activity size={14}/>}
+                                        </div>
+                                        <div>
+                                           <p className="text-sm font-bold text-slate-800 leading-tight group-hover:text-blue-600 transition-colors">{n.childName}</p>
+                                           <p className="text-[10px] text-slate-500 mb-1.5 font-medium">DNI: {n.dni}</p>
+                                           <div className="flex flex-wrap items-center gap-1.5">
+                                              <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${n.status === 'vencido' ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-green-50 text-green-700 border border-green-200'}`}>
+                                                 {n.status === 'vencido' ? `Vencido (${n.days}d)` : 'Toca Hoy'}
+                                              </span>
+                                              <span className="text-[9px] font-bold text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 uppercase tracking-wider">
+                                                 {n.type === 'Anemia' ? 'Módulo Anemia' : `Cita: ${n.subType}`}
+                                              </span>
+                                           </div>
+                                        </div>
+                                     </div>
+                                  ))}
+                               </div>
+                            )}
+                         </div>
+                         <div className="p-2 bg-slate-50 border-t border-slate-100 text-center">
+                             <button onClick={() => setShowNotifications(false)} className="text-xs font-bold text-slate-500 hover:text-slate-800 transition-colors">Cerrar panel</button>
+                         </div>
+                      </div>
+                   )}
+                </div>
+
+                <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border transition-colors shadow-sm ${isOnline ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200'}`}>
+                    <div className={`w-1.5 h-1.5 rounded-full ${isOnline ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
+                    <span className="hidden sm:inline">{isOnline ? 'Sistema en línea' : 'Sin conexión'}</span>
+                    <span className="sm:hidden">{isOnline ? 'Online' : 'Offline'}</span>
+                </div>
             </div>
         </header>
         
@@ -2587,9 +2902,9 @@ const App = () => {
             <div className="w-full max-w-[1400px] mx-auto">
               <ErrorBoundary>
                 {activeModule === 'dashboard' && <Dashboard children={children} />}
-                {activeModule === 'padron' && <PadronNominal children={children} setChildren={setChildrenSync} showToast={showToast} />}
-                {activeModule === 'cred' && <ModuloCRED children={children} setChildren={setChildrenSync} showToast={showToast} />}
-                {activeModule === 'anemia' && <ModuloAnemia children={children} setChildren={setChildrenSync} showToast={showToast} />}
+                {activeModule === 'padron' && <PadronNominal children={children} setChildren={setChildrenSync} showToast={showToast} appConfig={appConfig} />}
+                {activeModule === 'cred' && <ModuloCRED children={children} setChildren={setChildrenSync} showToast={showToast} currentUser={currentUser} appConfig={appConfig} />}
+                {activeModule === 'anemia' && <ModuloAnemia children={children} setChildren={setChildrenSync} showToast={showToast} currentUser={currentUser} />}
                 {activeModule === 'reportes' && <Reportes children={children} showToast={showToast} appConfig={appConfig} />}
                 {activeModule === 'configuracion' && <Configuracion users={users} setUsers={setUsersSync} appConfig={appConfig} setAppConfig={setAppConfigSync} children={children} setChildren={setChildrenSync} showToast={showToast} />}
               </ErrorBoundary>
