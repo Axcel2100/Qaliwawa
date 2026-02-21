@@ -186,7 +186,7 @@ const ESQUEMA_CONTROLES_CRED = [
     controles: [
       { id: "rn_1", label: "1° Control", desc: "< 7 días" },
       { id: "rn_2", label: "2° Control", desc: "7-14 días" },
-      { id: "rn_3", label: "3° Control", desc: "14-21 días" }
+      { id: "rn_3", label: "3° Control", desc: "15-21 días" }
     ]
   },
   {
@@ -223,6 +223,19 @@ const ESQUEMA_CONTROLES_CRED = [
 ];
 
 // --- HELPERS ---
+const getLocalDateString = () => {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const formatTitleCase = (str) => {
+  if (!str) return '';
+  return str.trim().split(/\s+/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+};
+
 const calculateDetailedAge = (birthDateString) => {
   if (!birthDateString) return null;
   const birthDate = new Date(birthDateString + 'T00:00:00'); 
@@ -659,12 +672,21 @@ const PadronNominal = ({ children, setChildren, showToast, appConfig }) => {
   
   const handleAdd = (e) => { 
     e.preventDefault(); 
+    
+    // Aplicamos el formato formal a los nombres antes de guardar
+    const childDataToSave = {
+        ...newChild,
+        nombres: formatTitleCase(newChild.nombres),
+        apellidos: formatTitleCase(newChild.apellidos),
+        responsable: formatTitleCase(newChild.responsable)
+    };
+
     if (isEditing) { 
-      setChildren(prev => prev.map(c => c.id === newChild.id ? newChild : c)); 
+      setChildren(prev => prev.map(c => c.id === newChild.id ? childDataToSave : c)); 
       showToast('Actualizado', 'success'); 
     } else { 
       const child = { 
-        ...newChild, id: Date.now(), anemia: false, hemoglobina: 0, estadoNutricional: 'Pendiente', 
+        ...childDataToSave, id: Date.now(), anemia: false, hemoglobina: 0, estadoNutricional: 'Pendiente', 
         controles: [], vacunas: {}, cronogramaSuplementos: {}, cronogramaCred: {}, suplementos: [], 
         proximaCita: '', proximaCitaAnemia: '', tratamientoAnemia: { inicio: null, entregas: [] }, 
         historialAnemia: [], tratamientosAnemiaPrevios: [] 
@@ -857,7 +879,7 @@ const ModuloCRED = ({ children, setChildren, showToast, currentUser, appConfig }
   const [newCitaTipo, setNewCitaTipo] = useState('CRED');
   const [hitoModal, setHitoModal] = useState({ show: false, hito: null, data: { fecha: '', hb: '' } });
   
-  const [controlModal, setControlModal] = useState({ show: false, controlId: null, label: '', data: { fecha: new Date().toISOString().split('T')[0], peso: '', talla: '', estadoNutricional: 'Normal' } });
+  const [controlModal, setControlModal] = useState({ show: false, controlId: null, label: '', data: { fecha: getLocalDateString(), peso: '', talla: '', estadoNutricional: 'Normal' } });
 
   const selectedChild = useMemo(() => children.find(c => c.id === parseInt(selectedId)), [children, selectedId]);
   
@@ -902,7 +924,7 @@ const ModuloCRED = ({ children, setChildren, showToast, currentUser, appConfig }
 
   const handleHitoClick = (hito) => {
     const existing = selectedChild.cronogramaSuplementos?.[hito.id] || {};
-    setHitoModal({ show: true, hito: hito, data: { fecha: existing.fecha || new Date().toISOString().split('T')[0], hb: existing.hb || '' } });
+    setHitoModal({ show: true, hito: hito, data: { fecha: existing.fecha || getLocalDateString(), hb: existing.hb || '' } });
   };
 
   const saveHito = () => {
@@ -1041,8 +1063,8 @@ const ModuloCRED = ({ children, setChildren, showToast, currentUser, appConfig }
                                                 return (
                                                     <button 
                                                         key={control.id} 
-                                                        onClick={() => setControlModal({ show: true, controlId: control.id, label: control.label, data: { fecha: record?.fecha || new Date().toISOString().split('T')[0], peso: record?.peso || '', talla: record?.talla || '', estadoNutricional: record?.estadoNutricional || 'Normal' } })} 
-                                                        className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all group ${isDone ? `bg-green-50 border-green-400 hover:bg-green-100` : 'bg-white border-slate-200 hover:border-purple-300 shadow-sm'}`}
+                                                        onClick={() => setControlModal({ show: true, controlId: control.id, label: control.label, data: { fecha: record?.fecha || getLocalDateString(), peso: record?.peso || '', talla: record?.talla || '', estadoNutricional: record?.estadoNutricional || 'Normal' } })} 
+                                                        className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all group ${isDone ? `bg-green-50 border-green-500 shadow-sm` : 'bg-white border-slate-200 hover:border-purple-300 shadow-sm'}`}
                                                     >
                                                         <div className={`text-sm font-bold mb-1 ${isDone ? 'text-green-800' : 'text-slate-700 group-hover:text-purple-700'}`}>{control.label}</div>
                                                         <div className="text-[11px] text-slate-500 text-center mb-2">{control.desc}</div>
@@ -1101,22 +1123,22 @@ const ModuloCRED = ({ children, setChildren, showToast, currentUser, appConfig }
                       )}
                       
                       {activeTab === 'citas' && (
-                        <div className="space-y-4 animate-fadeIn">
-                            <h2 className="text-xl font-bold text-purple-800">Agendar Próxima Cita</h2>
-                            <div className="flex flex-col sm:flex-row gap-3 max-w-lg">
-                                <select 
-                                    className="border border-slate-200 p-2 rounded-lg text-sm outline-none focus:ring-1 focus:ring-purple-400 font-medium text-slate-700"
-                                    value={newCitaTipo}
-                                    onChange={(e) => setNewCitaTipo(e.target.value)}
-                                >
-                                    <option value="CRED">Control CRED</option>
-                                    <option value="Vacunas">Vacunas</option>
-                                    <option value="Suplementación">Suplementación</option>
-                                </select>
-                                <input type="date" className="border border-slate-200 p-2 rounded-lg text-sm w-full outline-none focus:ring-1 focus:ring-purple-400" value={newCita} onChange={(e) => setNewCita(e.target.value)} />
-                                <button onClick={handleUpdateCita} className="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium shadow-sm hover:bg-blue-700 whitespace-nowrap">Agendar</button>
-                            </div>
-                        </div>
+                          <div className="space-y-4 animate-fadeIn">
+                              <h2 className="text-xl font-bold text-purple-800">Agendar Próxima Cita</h2>
+                              <div className="flex flex-col sm:flex-row gap-3 max-w-lg">
+                                  <select 
+                                      className="border border-slate-200 p-2 rounded-lg text-sm outline-none focus:ring-1 focus:ring-purple-400 font-medium text-slate-700"
+                                      value={newCitaTipo}
+                                      onChange={(e) => setNewCitaTipo(e.target.value)}
+                                  >
+                                      <option value="CRED">Control CRED</option>
+                                      <option value="Vacunas">Vacunas</option>
+                                      <option value="Suplementación">Suplementación</option>
+                                  </select>
+                                  <input type="date" className="border border-slate-200 p-2 rounded-lg text-sm w-full outline-none focus:ring-1 focus:ring-purple-400" value={newCita} onChange={(e) => setNewCita(e.target.value)} />
+                                  <button onClick={handleUpdateCita} className="bg-purple-600 text-white px-5 py-2 rounded-lg text-sm font-medium shadow-sm hover:bg-purple-700 whitespace-nowrap">Agendar</button>
+                              </div>
+                          </div>
                       )}
                   </div>
               </div>
@@ -1185,13 +1207,13 @@ const ModuloAnemia = ({ children, setChildren, showToast, currentUser }) => {
   const [activeTab, setActiveTab] = useState('tratamiento'); 
   const [newCita, setNewCita] = useState('');
   const [newCitaTipo, setNewCitaTipo] = useState('Control');
-  const [hbControl, setHbControl] = useState({ fecha: new Date().toISOString().split('T')[0], hb: '', tipo: 'Control', resultado: 'Normal', observacion: '' });
+  const [hbControl, setHbControl] = useState({ fecha: getLocalDateString(), hb: '', tipo: 'Control', resultado: 'Normal', observacion: '' });
   
   const [entregaModal, setEntregaModal] = useState({ show: false, index: null, fecha: '', peso: '', talla: '' });
   const [editHbIndex, setEditHbIndex] = useState(null);
   
   const [altaModal, setAltaModal] = useState(false);
-  const [altaForm, setAltaForm] = useState({ fecha: new Date().toISOString().split('T')[0], recuperado: true });
+  const [altaForm, setAltaForm] = useState({ fecha: getLocalDateString(), recuperado: true });
   const [deleteHbModal, setDeleteHbModal] = useState({ show: false, index: null });
 
   const selectedChild = useMemo(() => children.find(c => c.id === parseInt(selectedId)), [children, selectedId]);
@@ -1220,7 +1242,7 @@ const ModuloAnemia = ({ children, setChildren, showToast, currentUser }) => {
     if (!selectedChild.tratamientoAnemia) return;
     const currentEntregas = selectedChild.tratamientoAnemia.entregas || [];
     const entregaActual = currentEntregas[index];
-    let defaultFecha = new Date().toISOString().split('T')[0];
+    let defaultFecha = getLocalDateString();
     let defaultPeso = '';
     let defaultTalla = '';
     if (entregaActual) {
@@ -1250,7 +1272,7 @@ const ModuloAnemia = ({ children, setChildren, showToast, currentUser }) => {
       setAltaModal(false);
   };
 
-  const cancelEditHb = () => { setEditHbIndex(null); setHbControl({ fecha: new Date().toISOString().split('T')[0], hb: '', tipo: 'Control', resultado: 'Normal', observacion: '' }); };
+  const cancelEditHb = () => { setEditHbIndex(null); setHbControl({ fecha: getLocalDateString(), hb: '', tipo: 'Control', resultado: 'Normal', observacion: '' }); };
   const editHbControl = (displayIndex) => { const realIndex = (selectedChild.historialAnemia.length - 1) - displayIndex; const item = selectedChild.historialAnemia[realIndex]; setHbControl({...item, resultado: item.resultado || 'Normal'}); setEditHbIndex(realIndex); };
   const deleteHbControl = (displayIndex) => { setDeleteHbModal({ show: true, index: displayIndex }); };
   const confirmDeleteHb = () => {
@@ -1308,7 +1330,7 @@ const ModuloAnemia = ({ children, setChildren, showToast, currentUser }) => {
           showToast(`Hb Normal. Considere dar de alta.`, 'success');
       } else { showToast(`Guardado`, 'info'); }
       updateChildData(updates);
-      setHbControl({ fecha: new Date().toISOString().split('T')[0], hb: '', tipo: 'Control', resultado: 'Normal', observacion: '' });
+      setHbControl({ fecha: getLocalDateString(), hb: '', tipo: 'Control', resultado: 'Normal', observacion: '' });
   };
 
   const handleUpdateCita = () => {
@@ -1368,7 +1390,7 @@ const ModuloAnemia = ({ children, setChildren, showToast, currentUser }) => {
                    </div>
                    
                    <div className={`px-4 py-2 rounded-lg border ${child.citaStatus.bg} ${child.citaStatus.border} flex flex-col items-center min-w-[120px] w-full sm:w-auto shrink-0`}>
-                      <span className={`text-[11px] font-bold uppercase ${child.citaStatus.color}`}>{child.citaStatus.status === 'sin_cita' ? 'Cita Anemia' : child.citaStatus.label}</span>
+                      <span className={`text-[11px] font-bold uppercase ${child.citaStatus.color}`}>{child.citaStatus.status === 'sin_cita' ? 'Sin Cita' : child.citaStatus.label}</span>
                       {child.proximaCitaAnemia && <span className={`text-[9px] font-bold uppercase ${child.citaStatus.color} opacity-70`}>{child.proximaCitaAnemiaTipo || 'Control'}</span>}
                       <span className={`text-sm font-medium ${child.citaStatus.color}`}>{child.citaStatus.status === 'sin_cita' ? 'No programada' : formatDateLong(child.proximaCitaAnemia)}</span>
                    </div>
@@ -1438,7 +1460,7 @@ const ModuloAnemia = ({ children, setChildren, showToast, currentUser }) => {
                         <div className="flex justify-between"><span>Tipo:</span> <span className="font-bold">{selectedChild.tipoAnemia}</span></div>
                       </div>
                     </div>
-                    <button onClick={() => { setAltaForm({ fecha: new Date().toISOString().split('T')[0], recuperado: true }); setAltaModal(true); }} className="w-full border-2 border-green-500 text-green-700 font-bold py-2 rounded-lg text-sm hover:bg-green-50 transition-colors">Dar de Alta</button>
+                    <button onClick={() => { setAltaForm({ fecha: getLocalDateString(), recuperado: true }); setAltaModal(true); }} className="w-full border-2 border-green-500 text-green-700 font-bold py-2 rounded-lg text-sm hover:bg-green-50 transition-colors">Dar de Alta</button>
                   </div>
                   <div className="md:col-span-2">
                     <h4 className="font-bold text-slate-800 text-base mb-4 flex items-center gap-1.5"><Circle className="text-blue-500" size={18}/> Esquema 6 Meses</h4>
@@ -1678,8 +1700,8 @@ const ModuloAnemia = ({ children, setChildren, showToast, currentUser }) => {
 const Reportes = ({ children, showToast, appConfig }) => {
   const [reportType, setReportType] = useState('diario'); 
   const [moduleType, setModuleType] = useState('cred'); // 'cred', 'anemia'
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-  const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7));
+  const [selectedDate, setSelectedDate] = useState(getLocalDateString());
+  const [selectedMonth, setSelectedMonth] = useState(getLocalDateString().slice(0, 7));
 
   const safeConfig = appConfig || { nombreCentro: 'Centro de Salud' };
 
@@ -2216,11 +2238,18 @@ const Configuracion = ({ users, setUsers, appConfig, setAppConfig, children, set
   const saveUser = (e) => {
       e.preventDefault();
       let updatedUsers = [...users];
+      
+      // Aplicar formato formal también al nombre del personal
+      const userDataToSave = {
+          ...userForm,
+          nombre: formatTitleCase(userForm.nombre)
+      };
+
       if (editingUserIndex !== null) {
-          updatedUsers[editingUserIndex] = { ...userForm, id: users[editingUserIndex].id };
+          updatedUsers[editingUserIndex] = { ...userDataToSave, id: users[editingUserIndex].id };
           showToast('Usuario actualizado', 'success');
       } else {
-          updatedUsers.push({ ...userForm, id: Date.now() });
+          updatedUsers.push({ ...userDataToSave, id: Date.now() });
           showToast('Nuevo usuario creado', 'success');
       }
       setUsers(updatedUsers);
